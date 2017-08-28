@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_d412b3b3",
+        "filename": "pgaas/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1907
+      },
+      "writtenOn": "2017-08-28T15:15:21Z",
+      "side": 1,
+      "message": "Typo: (and it\u0027s my fault) should be python-psycopg2",
+      "revId": "c6feb6c1ea8337d819ce395a43bde90d894abba7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
