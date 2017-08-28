@@ -34,6 +34,7 @@ limitations under the License.
   <modules>
      <module>sshkeyshare</module>
      <module>pgaas</module>
+     <module>dnsdesig</module>
   </modules>
 
 </project>
