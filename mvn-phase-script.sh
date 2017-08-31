@@ -97,7 +97,7 @@ deploy)
     set +x
     hostport=$(echo $1 | cut -f3 -d /)
     host=$(echo $hostport | cut -f1 -d:)
-    settings=$HOME/.m2/settings.xml
+    settings=${SETTINGS_FILE:-$HOME/.m2/settings.xml}
     ( echo machine $host; echo login $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/username/text()" $settings); echo password $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/password/text()" $settings) ) >$HOME/.netrc
     chmod 600 $HOME/.netrc
     set -x
