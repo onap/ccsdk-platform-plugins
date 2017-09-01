@@ -23,7 +23,7 @@ echo "=> Prepare environment "
 
 # This is the base for where "deploy" will upload
 # MVN_NEXUSPROXY is set in the pom.xml
-REPO=$MVN_NEXUSPROXY/content/sites/raw
+REPO=$MVN_NEXUSPROXY/content/sites/raw/$MVN_PROJECT_GROUPID
 
 TIMESTAMP=$(date +%C%y%m%dT%H%M%S)
 export BUILD_NUMBER="${TIMESTAMP}"
@@ -98,17 +98,17 @@ deploy)
     hostport=$(echo $1 | cut -f3 -d /)
     host=$(echo $hostport | cut -f1 -d:)
     settings=${SETTINGS_FILE:-$HOME/.m2/settings.xml}
-    ( echo machine $host; echo login $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/username/text()" $settings); echo password $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/password/text()" $settings) ) >$HOME/.netrc
+    echo machine $host login $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/username/text()" $settings) password $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/password/text()" $settings) >$HOME/.netrc
     chmod 600 $HOME/.netrc
     set -x
   }
   function putraw {
-    curl -X PUT -H "Content-Type: text/plain" --netrc --upload-file $1 --url $REPO/$2
+    curl -X PUT -H "Content-Type: $3" --netrc --upload-file $1 --url $REPO/$2
   }
   setnetrc $REPO
   PLUGIN_FILE=$(echo $PLUGIN_NAME-*.wgn)
-  putraw $PLUGIN_FILE plugins/$PLUGIN_FILE
-  putraw $TYPE_FILE_SOURCE $TYPE_FILE_DEST
+  putraw $PLUGIN_FILE plugins/$PLUGIN_FILE application/gzip
+  putraw $TYPE_FILE_SOURCE $TYPE_FILE_DEST text/x-yaml
   set +e +x
   ;;
 *)
