@@ -205,6 +205,11 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <MVN_SERVER_ID>${project.distributionManagement.snapshotRepository.id}</MVN_SERVER_ID>
+                <TYPE_FILE_SOURCE>${typefile.source}</TYPE_FILE_SOURCE>
+                <TYPE_FILE_DEST>${typefile.dest}</TYPE_FILE_DEST>
+                <PLUGIN_NAME>${plugin.name}</PLUGIN_NAME>
+                <PLUGIN_SUBDIR>${plugin.subdir}</PLUGIN_SUBDIR>
               </environmentVariables>
             </configuration>
           </execution>
