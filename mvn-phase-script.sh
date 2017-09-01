@@ -23,7 +23,7 @@ echo "=> Prepare environment "
 
 # This is the base for where "deploy" will upload
 # MVN_NEXUSPROXY is set in the pom.xml
-REPO=$MVN_NEXUSPROXY/content/sites/raw
+REPO=$MVN_NEXUSPROXY/content/sites/raw/$MVN_PROJECT_GROUPID
 
 TIMESTAMP=$(date +%C%y%m%dT%H%M%S)
 export BUILD_NUMBER="${TIMESTAMP}"
@@ -53,6 +53,30 @@ generate-sources)
 compile)
   echo "==> compile phase script"
   # Nothing to do
+  # TEMPORARY: PLAN TO ABANDON.  TRYING TO GET DEPLOY STEP WORKING PROPERLY.  DO NOT APPROVE.
+  set -e -x
+  function setnetrc {
+    # Turn off -x so won't leak the credentials
+    set +x
+    hostport=$(echo $1 | cut -f3 -d /)
+    host=$(echo $hostport | cut -f1 -d:)
+    settings=${SETTINGS_FILE:-$HOME/.m2/settings.xml}
+    echo machine $host login $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/username/text()" $settings) password $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/password/text()" $settings) >$HOME/.netrc
+    chmod 600 $HOME/.netrc
+    set -x
+  }
+  function putraw {
+    curl -X PUT -H "Content-Type: text/plain" --netrc --upload-file $1 --url $REPO/$2
+  }
+  if [ "$MVN_SERVER_ID" != "" ]
+  then
+    echo Choices: $(xpath -q -e "//servers/server/id" ${SETTINGS_FILE:-$HOME/.m2/settings.xml})
+    echo Using: $MVN_SERVER_ID
+    setnetrc $REPO
+    putraw $TYPE_FILE_SOURCE $TYPE_FILE_DEST
+    false
+  fi
+  set +e +x
   ;;
 test)
   echo "==> test phase script"
