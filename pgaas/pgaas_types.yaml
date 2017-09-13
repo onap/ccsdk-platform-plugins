@@ -6,7 +6,7 @@ plugins:
   pgaas:
     executor: central_deployment_agent
     package_name: pgaas
-    package_version: 0.1.0
+    package_version: 1.0.0
 
 node_types:
   dcae.nodes.pgaas.cluster:
