@@ -1,0 +1,8 @@
+Code-Review+1: Andrew Gauld <ag1282@att.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Marcus Williams <marcus.williams@intel.com>
+Submitted-by: Marcus Williams <marcus.williams@intel.com>
+Submitted-at: Wed, 27 Sep 2017 20:42:37 +0000
+Reviewed-on: http://gerrit.onap.org/r/16075
+Project: ccsdk/platform/plugins
+Branch: refs/heads/master
