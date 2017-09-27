@@ -33,7 +33,8 @@ if [ -z "${MVN_NEXUSPROXY}" ]; then
     echo "MVN_NEXUSPROXY environment variable not set.  Cannot proceed"
     exit
 fi
-MVN_NEXUSPROXY_HOST=$(echo $MVN_NEXUSPROXY |cut -f3 -d'/' | cut -f1 -d':')
+MVN_NEXUSPROXY_HOST=$(echo "$MVN_NEXUSPROXY" |cut -f3 -d'/' | cut -f1 -d':')
+echo "=> Nexus Proxy at $MVN_NEXUSPROXY_HOST, $MVN_NEXUSPROXY"
 
 
 # use the version text detect which phase we are in in LF CICD process: verify, merge, or (daily) release

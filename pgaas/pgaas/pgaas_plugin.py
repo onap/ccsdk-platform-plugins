@@ -94,6 +94,11 @@ sys.path = opath
 
 """
 
+OPT_MANAGER_RESOURCES = "/opt/manager/resources"
+
+def setOptManagerResources(o):
+  global OPT_MANAGER_RESOURCES
+  OPT_MANAGER_RESOURCES = o
 
 def safestr(s):
   return urllib.quote(str(s), '')
@@ -178,7 +183,8 @@ def rootconn(data, dbname='postgres'):
   connecting to the specified database
   """
   debug("rootconn(..data..,{0})".format(safestr(dbname)))
-  return doconn(rootdesc(data, dbname))
+  ret = doconn(rootdesc(data, dbname))
+  return ret
 
 def onedesc(data, dbname, role, access):
   """
@@ -253,7 +259,8 @@ def getclusterinfo(wfqdn, reuse, rfqdn, related):
     if len(related) != 0:
       raiseNonRecoverableError('Cluster SSH keypair must not be specified when using an existing cluster')
     try:
-      with open('/opt/manager/resources/pgaas/{0}'.format(wfqdn).lower(), 'r') as f:
+      fn = '{0}/pgaas/{1}'.format(OPT_MANAGER_RESOURCES, wfqdn).lower()
+      with open('{0}/pgaas/{1}'.format(OPT_MANAGER_RESOURCES, wfqdn).lower(), 'r') as f:
         data = json.load(f)
         data['rw'] = wfqdn
         return data
@@ -270,16 +277,16 @@ def getclusterinfo(wfqdn, reuse, rfqdn, related):
   data = { 'ro': rfqdn, 'pubkey': related[0].instance.runtime_properties['public'], 'data': related[0].instance.runtime_properties['base64private'] }
   os.umask(077)
   try:
-    os.makedirs('/opt/manager/resources/pgaas')
+    os.makedirs('{0}/pgaas'.format(OPT_MANAGER_RESOURCES))
   except:
     pass
   try:
-    with open('/opt/manager/resources/pgaas/{0}'.format(wfqdn).lower(), 'w') as f:
+    with open('{0}/pgaas/{1}'.format(OPT_MANAGER_RESOURCES, wfqdn).lower(), 'w') as f:
       f.write(json.dumps(data))
   except Exception as e:
     warn("Error: {0}".format(e))
     warn("Stack: {0}".format(traceback.format_exc()))
-    raiseNonRecoverableError('Cannot write cluster information to /opt/manager/resources/pgaas: fqdn={0}, err={1}'.format(safestr(wfqdn),e))
+    raiseNonRecoverableError('Cannot write cluster information to {0}/pgaas: fqdn={1}, err={2}'.format(OPT_MANAGER_RESOURCES, safestr(wfqdn),e))
   data['rw'] = wfqdn
   return(data)
   
@@ -311,7 +318,7 @@ def rm_pgaas_cluster(**kwargs):
     warn("rm_pgaas_cluster()")
     wfqdn = ctx.node.properties['writerfqdn']
     if chkfqdn(wfqdn) and not ctx.node.properties['use_existing']:
-      os.remove('/opt/manager/resources/pgaas/{0}'.format(wfqdn))
+      os.remove('{0}/pgaas/{1}'.format(OPT_MANAGER_RESOURCES, wfqdn))
     warn('All done')
   except Exception as e:
     ctx.logger.warn("Error: {0}".format(e))
