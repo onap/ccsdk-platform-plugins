@@ -42,6 +42,27 @@ echo "=> Nexus Proxy at $MVN_NEXUSPROXY_HOST, $MVN_NEXUSPROXY"
 # mvn phase in life cycle
 MVN_PHASE="$2"
 
+function setnetrc {
+  # Turn off -x so won't leak the credentials
+  set +x
+  serverid=${MVN_RAWREPO_SERVERID:-ecomp-raw}
+  hostport=$(echo $1 | cut -f3 -d /)
+  host=$(echo $hostport | cut -f1 -d:)
+  settings=${SETTINGS_FILE:-$HOME/.m2/settings.xml}
+  echo machine $host login $(xpath -q -e "//servers/server[id='$serverid']/username/text()" $settings) password $(xpath -q -e "//servers/server[id='$serverid']/password/text()" $settings) >$HOME/.netrc
+  chmod 600 $HOME/.netrc
+  set -x
+}
+
+function putraw {
+  case "$MVN_PROJECT_VERSION" in 
+    *SNAPSHOT ) export subdir=snapshots ;;
+    * ) export subdir=releases ;;
+  esac 
+  curl -X PUT -H "Content-Type: $3" --netrc --upload-file $1 --url $REPO/$2
+  curl -X PUT -H "Content-Type: $3" --netrc --upload-file $1 --url $REPO/$subdir/$2
+}
+
 case $MVN_PHASE in
 clean)
   echo "==> clean phase script"
@@ -93,19 +114,6 @@ deploy)
   echo "==> deploy phase script"
   # Just upload files to Nexus
   set -e -x
-  function setnetrc {
-    # Turn off -x so won't leak the credentials
-    set +x
-    hostport=$(echo $1 | cut -f3 -d /)
-    host=$(echo $hostport | cut -f1 -d:)
-    settings=${SETTINGS_FILE:-$HOME/.m2/settings.xml}
-    echo machine $host login $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/username/text()" $settings) password $(xpath -q -e "//servers/server[id='$MVN_SERVER_ID']/password/text()" $settings) >$HOME/.netrc
-    chmod 600 $HOME/.netrc
-    set -x
-  }
-  function putraw {
-    curl -X PUT -H "Content-Type: $3" --netrc --upload-file $1 --url $REPO/$2
-  }
   setnetrc $REPO
   PLUGIN_FILE=$(echo $PLUGIN_NAME-*.wgn)
   putraw $PLUGIN_FILE plugins/$PLUGIN_FILE application/gzip
