@@ -163,6 +163,9 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}</MVN_RAWREPO_BASEURL_UPLOAD>
+                <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}</MVN_RAWREPO_BASEURL_DOWNLOAD>
+                <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
                 <PLUGIN_NAME>${plugin.name}</PLUGIN_NAME>
                 <PLUGIN_SUBDIR>${plugin.subdir}</PLUGIN_SUBDIR>
               </environmentVariables>
@@ -185,6 +188,9 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}</MVN_RAWREPO_BASEURL_UPLOAD>
+                <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}</MVN_RAWREPO_BASEURL_DOWNLOAD>
+                <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
               </environmentVariables>
             </configuration>
           </execution>
@@ -205,6 +211,9 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}</MVN_RAWREPO_BASEURL_UPLOAD>
+                <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}</MVN_RAWREPO_BASEURL_DOWNLOAD>
+                <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
               </environmentVariables>
             </configuration>
           </execution>
@@ -225,6 +234,9 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}</MVN_RAWREPO_BASEURL_UPLOAD>
+                <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}</MVN_RAWREPO_BASEURL_DOWNLOAD>
+                <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
                 <PLUGIN_NAME>${plugin.name}</PLUGIN_NAME>
                 <PLUGIN_SUBDIR>${plugin.subdir}</PLUGIN_SUBDIR>
               </environmentVariables>
@@ -247,6 +259,9 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}</MVN_RAWREPO_BASEURL_UPLOAD>
+                <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}</MVN_RAWREPO_BASEURL_DOWNLOAD>
+                <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
                 <PLUGIN_NAME>${plugin.name}</PLUGIN_NAME>
                 <PLUGIN_SUBDIR>${plugin.subdir}</PLUGIN_SUBDIR>
               </environmentVariables>
@@ -269,6 +284,9 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}</MVN_RAWREPO_BASEURL_UPLOAD>
+                <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}</MVN_RAWREPO_BASEURL_DOWNLOAD>
+                <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
               </environmentVariables>
             </configuration>
           </execution>
@@ -289,6 +307,9 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}</MVN_RAWREPO_BASEURL_UPLOAD>
+                <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}</MVN_RAWREPO_BASEURL_DOWNLOAD>
+                <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
                 <MVN_SERVER_ID>${project.distributionManagement.snapshotRepository.id}</MVN_SERVER_ID>
                 <TYPE_FILE_SOURCE>${typefile.source}</TYPE_FILE_SOURCE>
                 <TYPE_FILE_DEST>${typefile.dest}</TYPE_FILE_DEST>
