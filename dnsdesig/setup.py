@@ -1,7 +1,7 @@
 # ============LICENSE_START====================================================
 # org.onap.ccsdk
 # =============================================================================
-# Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ from setuptools import setup, find_packages
 
 setup(
   name='dnsdesig',
-  version='1.0.0',
+  version='1.0.1',
   packages=find_packages(),
   author='AT&T',
   description=('Cloudify plugin for creating DNS entries using Designate.'),

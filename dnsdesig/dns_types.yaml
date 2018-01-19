@@ -1,7 +1,7 @@
 # ============LICENSE_START====================================================
 # org.onap.ccsdk
 # =============================================================================
-# Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ plugins:
   dns_designate:
     executor: central_deployment_agent
     package_name: dnsdesig
-    package_version: 1.0.0
+    package_version: 1.0.1
 
 node_types:
   ccsdk.nodes.dns.arecord:

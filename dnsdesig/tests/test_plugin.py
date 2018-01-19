@@ -1,7 +1,7 @@
 # ============LICENSE_START====================================================
 # org.onap.ccsdk
 # =============================================================================
-# Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,16 +22,22 @@ import dnsdesig.dns_plugin
 from cloudify.mocks import MockCloudifyContext
 from cloudify.state import current_ctx
 from cloudify.exceptions import NonRecoverableError
+from cloudify.exceptions import RecoverableError
 from cloudify import ctx
 
 class _resp(object):
-  def __init__(self, code, body = None):
+  def __init__(self, code, body = None, rhdrs = None):
     self.status_code = code
+    if rhdrs is not None:
+      self.headers = rhdrs
     if body is not None:
       self._json = body
 
   def json(self):
     return self._json
+
+  def rhdrs(self):
+    return self.headers
 
 def _same(a, b):
   t1 = type(a)
@@ -74,6 +80,7 @@ class _req(object):
 _nf = _resp(404)
 _ar = _resp(401)
 _np = _resp(403)
+_svcunavail = _resp(503)
 _ok = _resp(200, { 'something': 'or-other' })
 
 _tok = 'at'
@@ -81,7 +88,7 @@ _tok = 'at'
 _hdrs = { 'X-Auth-Token': _tok }
 
 _goodos = {
-  'auth_url': 'https://example.com/identity',
+  'auth_url': 'https://example.com/identity/v3',
   'password': 'pw',
   'region': 'r',
   'tenant_name': 'tn',
@@ -89,7 +96,23 @@ _goodos = {
 }
 
 _bados = {
-  'auth_url': 'https://example.com/identity',
+  'auth_url': 'https://example.com/identity/v3',
+  'password': 'xx',
+  'region': 'r',
+  'tenant_name': 'tn',
+  'username': 'un'
+}
+
+_goodosv2 = {
+  'auth_url': 'https://example.com/identity/v2.0',
+  'password': 'pw',
+  'region': 'r',
+  'tenant_name': 'tn',
+  'username': 'un'
+}
+
+_badosv2 = {
+  'auth_url': 'https://example.com/identity/v2.0',
   'password': 'xx',
   'region': 'r',
   'tenant_name': 'tn',
@@ -98,21 +121,79 @@ _bados = {
 
 
 _answers = [
-  # Authenticate
-  _req('POST', 'https://example.com/identity/tokens', headers=None, resp=_resp(200, {
+  # Authenticate v3
+  _req('POST', 'https://example.com/identity/v3/auth/tokens', headers=None, resp=_resp(200, {
+    'token': {
+      'catalog': [
+        {
+          'type': 'dns',
+          'endpoints': [
+            {
+              'interface': 'public',
+              'region': 'r2',
+              'url': 'https://example.com/invalid2'
+            },
+            {
+              'interface': 'public',
+              'region': 'r3',
+              'url': 'https://example.com/invalid3'
+            },
+            {
+              'interface': 'public',
+              'url': 'https://example.com/dns'
+            }
+          ]
+        }
+      ]
+    }
+  }, rhdrs = {
+    'X-Subject-Token': _tok
+  }), json={
+    'auth': {
+      'identity': {
+        'methods': [
+          'password'
+        ],
+        'password': {
+          'user': {
+            'name': 'un',
+            'domain': {
+              'id': 'default'
+            },
+            'password': 'pw'
+          }
+        }
+      },
+      'scope': {
+        'project': {
+          'name': 'tn',
+          'domain': {
+            'id': 'default'
+          }
+        }
+      }
+    }
+  }),
+  # Invalid authentication v3
+  _req('POST', 'https://example.com/identity/v3/auth/tokens', headers=None, resp=_np),
+  # Authenticate v2.0
+  _req('POST', 'https://example.com/identity/v2.0/tokens', headers=None, resp=_resp(200, {
     'access': {
       'token': {
         'id': _tok
       }, 'serviceCatalog': [
         {
-	  'type': 'dns',
-	  'endpoints': [
+          'type': 'dns',
+          'endpoints': [
+            {
+              'publicURL': 'https://example.com/dns',
+              'region': 'r'
+            },
 	    {
-	      'publicURL': 'https://example.com/dns',
-	      'region': 'r'
+	      'publicURL': 'https://example.com/otherregions'
 	    }
-	  ]
-	}
+          ]
+        }
       ]
     }
   }), json={
@@ -120,18 +201,18 @@ _answers = [
       'tenantName': 'tn',
       'passwordCredentials': {
         'username': 'un',
-	'password': 'pw'
+        'password': 'pw'
       }
     }
   }),
-  # Invalid authentication
-  _req('POST', 'https://example.com/identity/tokens', headers=None, resp=_np),
+  # Invalid authentication v2.0
+  _req('POST', 'https://example.com/identity/v2.0/tokens', headers=None, resp=_np),
   # Get zones
   _req('GET', 'https://example.com/dns/v2/zones', headers=_hdrs, resp=_resp(200, {
     'zones': [
       {
         'name': 'x.example.com.',
-	'id': 'z1'
+        'id': 'z1'
       }
     ]
   })),
@@ -139,22 +220,30 @@ _answers = [
   _req('GET', 'https://example.com/dns/v2/zones/z1/recordsets?limit=1000', headers=_hdrs, resp=_resp(200, {
     'recordsets': [
       {
-	'id': 'ar1',
+        'id': 'ar1',
         'type': 'A',
-	'name': 'a.x.example.com.',
-	'ttl': 300,
-	'records': [
-	  '87.65.43.21',
-	  '98.76,54.32'
-	]
+        'name': 'a.x.example.com.',
+        'ttl': 300,
+        'records': [
+          '87.65.43.21',
+          '98.76,54.32'
+        ]
       }, {
-	'id': 'cname1',
+        'id': 'cname1',
         'type': 'CNAME',
-	'name': 'c.x.example.com.',
-	'ttl': 300,
-	'records': [
-	  'a.x.example.com.'
-	]
+        'name': 'c.x.example.com.',
+        'ttl': 300,
+        'records': [
+          'a.x.example.com.'
+        ]
+      }, {
+        'id': 'noservice',
+        'type': 'CNAME',
+        'name': 'noservice.x.example.com.',
+        'ttl': 300,
+        'records': [
+          'a.x.example.com.'
+        ]
       }
     ]
   })),
@@ -196,7 +285,9 @@ _answers = [
   # Delete A recordset
   _req('DELETE', 'https://example.com/dns/v2/zones/z1/recordsets/ar1', headers=_hdrs, resp=_ok),
   # Delete CNAME recordset
-  _req('DELETE', 'https://example.com/dns/v2/zones/z1/recordsets/cname1', headers=_hdrs, resp=_ok)
+  _req('DELETE', 'https://example.com/dns/v2/zones/z1/recordsets/cname1', headers=_hdrs, resp=_ok),
+  # service unavailable
+  _req('DELETE', 'https://example.com/dns/v2/zones/z1/recordsets/noservice', headers=_hdrs, resp=_svcunavail)
 ]
 
 def _match(op, url, headers, json = None):
@@ -237,6 +328,15 @@ def _setup(os, fqdn, ttl=None):
     return newfcn
   return fcnbuilder
 
+@_setup(_badosv2, 'a.x.example.com')
+def test_dns_badauthv2():
+  with pytest.raises(NonRecoverableError):
+    dnsdesig.dns_plugin.anotneeded()
+
+@_setup(_goodosv2, 'a.x.example.com')
+def test_dns_goodauthv2():
+  dnsdesig.dns_plugin.anotneeded()
+
 @_setup(_bados, 'a.x.example.com')
 def test_dns_badauth():
   with pytest.raises(NonRecoverableError):
@@ -270,3 +370,11 @@ def test_dns_modcnamerecord():
 @_setup(_goodos, 'c.x.example.com')
 def test_dns_delcname():
   dnsdesig.dns_plugin.cnamenotneeded()
+
+@_setup(_goodos, 'noservice.x.example.com')
+def test_dns_delcname():
+  with pytest.raises(RecoverableError):
+    dnsdesig.dns_plugin.cnamenotneeded()
+
+def test_module_logger():
+  dnsdesig.get_module_logger('dnsdesig')
