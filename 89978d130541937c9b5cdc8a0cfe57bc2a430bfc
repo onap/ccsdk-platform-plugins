@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Jack Lucas <jflucas@research.att.com>
+Code-Review+1: Tony Hansen <tony@att.com>
+Submitted-by: Jack Lucas <jflucas@research.att.com>
+Submitted-at: Tue, 23 Jan 2018 22:16:10 +0000
+Reviewed-on: https://gerrit.onap.org/r/28685
+Project: ccsdk/platform/plugins
+Branch: refs/heads/master
