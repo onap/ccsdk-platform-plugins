@@ -43,24 +43,13 @@ limitations under the License.
     <!-- path, in repo, to store type file -->
     <typefile.dest>type_files/pgaas/pgaas_types.yaml</typefile.dest>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <sonar.skip>true</sonar.skip>
     <sonar.sources>.</sonar.sources>
-    <!-- customize the SONARQUBE URL -->
-    <sonar.host.url>http://localhost:9000</sonar.host.url>
-    <sonar.junit.reportsPath>**/xunit-results.xml</sonar.junit.reportsPath>
-    <sonar.python.coverage.reportPath>**/coverage.xml</sonar.python.coverage.reportPath>
-    <sonar.exclusions>tests/*</sonar.exclusions>
-    <!-- below are language dependent -->
-    <!-- for Python -->
+    <sonar.junit.reportsPath>xunit-results.xml</sonar.junit.reportsPath>
+    <sonar.python.coverage.reportPath>coverage.xml</sonar.python.coverage.reportPath>
     <sonar.language>py</sonar.language>
     <sonar.pluginName>Python</sonar.pluginName>
     <sonar.inclusions>**/*.py</sonar.inclusions>
-    <!-- for JavaScaript -->
-    <!--
-    <sonar.language>js</sonar.language>
-    <sonar.pluginName>JS</sonar.pluginName>
-    <sonar.inclusions>**/*.js</sonar.inclusions>
-    -->
+    <sonar.exclusions>tests/*,setup.py</sonar.exclusions>
   </properties>
 
   <build>

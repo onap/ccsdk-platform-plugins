@@ -36,5 +36,10 @@ limitations under the License.
      <module>pgaas</module>
      <module>dnsdesig</module>
   </modules>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <sonar.host.url>http://localhost:9000</sonar.host.url>
+    <sonar.exclusions>**/*.py</sonar.exclusions>
+  </properties>
 
 </project>
