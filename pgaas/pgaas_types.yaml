@@ -1,12 +1,11 @@
+# -*- indent-tabs-mode: nil -*- # vi: set expandtab:
 tosca_definitions_version: cloudify_dsl_1_3
 
-imports:
-  - http://www.getcloudify.org/spec/cloudify/3.4/types.yaml
 plugins:
   pgaas:
     executor: central_deployment_agent
     package_name: pgaas
-    package_version: 1.0.0
+    package_version: 1.1.0
 
 node_types:
   dcae.nodes.pgaas.cluster:
@@ -23,10 +22,19 @@ node_types:
         description: 'FQDN used for read-only access to the cluster (default - same as writerfqdn)'
         type: string
         default: ''
+      port:
+        description: 'Port used for access to the cluster'
+        type: string
+        default: '5432'
+      initialpassword:
+        description: 'Password of existing PG instance to take control of'
+        type: string
+        default: ''
     interfaces:
       cloudify.interfaces.lifecycle:
         create: pgaas.pgaas.pgaas_plugin.add_pgaas_cluster
         delete: pgaas.pgaas.pgaas_plugin.rm_pgaas_cluster
+
   dcae.nodes.pgaas.database:
     derived_from: cloudify.nodes.Root
     properties:

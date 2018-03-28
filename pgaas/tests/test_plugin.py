@@ -1,7 +1,7 @@
 # ============LICENSE_START====================================================
 # org.onap.ccsdk
 # =============================================================================
-# Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2017-2018 AT&T Intellectual Property. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -60,6 +60,15 @@ class MockRuntimeProperties(object):
   def runtime_properties(self):
     return self._runtime_properties
 
+class MockSocket(object):
+  def __init__(self):
+    pass
+  def connect(self,host=None,port=None):
+    pass
+  def close(self):
+    pass  
+
+
 def _connect(h,p):
   return { }
                        
@@ -70,7 +79,9 @@ def set_mock_context(msg, monkeypatch):
     'writerfqdn': 'test.bar.example.com',
     'use_existing': False,
     'readerfqdn': 'test-ro.bar.example.com',
-    'name': 'testdb'
+    'name': 'testdb',
+    'port': '5432',
+    'initialpassword': 'test'
     }
     
   sshkeyprops = {
@@ -107,14 +118,6 @@ def test_add_pgaas_cluster(monkeypatch):
   finally:
     current_ctx.clear()
     os.system("echo After test; ls -l /tmp/pgaas") #### DELETE
-
-class MockSocket(object):
-  def __init__(self):
-    pass
-  def connect(self,host=None,port=None):
-    pass
-  def close(self):
-    pass  
 
 @pytest.mark.dependency(depends=['test_add_pgaas_cluster'])
 def test_add_database(monkeypatch):
