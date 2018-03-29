@@ -41,7 +41,7 @@ limitations under the License.
     <!-- path of types file itself relative to this file -->
     <typefile.source>pgaas_types.yaml</typefile.source>
     <!-- path, in repo, to store type file -->
-    <typefile.dest>type_files/pgaas/1.1.0/pgaas_types.yaml</typefile.dest>
+    <typefile.dest>type_files/pgaas/pgaas_types.yaml</typefile.dest>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.sources>.</sonar.sources>
     <sonar.junit.reportsPath>xunit-results.xml</sonar.junit.reportsPath>
@@ -227,11 +227,11 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <PLUGIN_NAME>${plugin.name}</PLUGIN_NAME>
+                <PLUGIN_SUBDIR>${plugin.subdir}</PLUGIN_SUBDIR>
                 <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}</MVN_RAWREPO_BASEURL_UPLOAD>
                 <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}</MVN_RAWREPO_BASEURL_DOWNLOAD>
                 <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
-                <PLUGIN_NAME>${plugin.name}</PLUGIN_NAME>
-                <PLUGIN_SUBDIR>${plugin.subdir}</PLUGIN_SUBDIR>
               </environmentVariables>
             </configuration>
           </execution>
@@ -252,11 +252,11 @@ limitations under the License.
                 <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
                 <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
                 <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
+                <PLUGIN_NAME>${plugin.name}</PLUGIN_NAME>
+                <PLUGIN_SUBDIR>${plugin.subdir}</PLUGIN_SUBDIR>
                 <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}</MVN_RAWREPO_BASEURL_UPLOAD>
                 <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}</MVN_RAWREPO_BASEURL_DOWNLOAD>
                 <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
-                <PLUGIN_NAME>${plugin.name}</PLUGIN_NAME>
-                <PLUGIN_SUBDIR>${plugin.subdir}</PLUGIN_SUBDIR>
               </environmentVariables>
             </configuration>
           </execution>
