@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_65775503",
+        "filename": "pgaas/pgaas/logginginterface.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2018-04-04T19:13:14Z",
+      "side": 1,
+      "message": "I can remove the /var/tmp log file entirely. Its limited information is still useful in certain circumstances, but it doesn\u0027t have to be in ONAP.",
+      "parentUuid": "5a93c517_ae2a1f8e",
+      "revId": "01e3a9758f4ea08108dcefb8bc64466eed4cfc14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_e2091b2d",
         "filename": "pgaas/pgaas/pgaas_plugin.py",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_25906d42",
+        "filename": "pgaas/pgaas/pgaas_plugin.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2018-04-04T19:13:14Z",
+      "side": 1,
+      "message": "yes\nit could be modified to use a different source, but that requires additional development",
+      "parentUuid": "5a93c517_e2091b2d",
+      "revId": "01e3a9758f4ea08108dcefb8bc64466eed4cfc14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_22006300",
         "filename": "pgaas/pgaas/pgaas_plugin.py",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2018-04-04T12:18:15Z",
       "side": 1,
       "message": "What is the location prefix?  I understand where it came from  in R1 (it was related to the use of the Designate DNS service), but don\u0027t know how it fits in R2.",
+      "revId": "01e3a9758f4ea08108dcefb8bc64466eed4cfc14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a56d5d34",
+        "filename": "pgaas/pgaas/pgaas_plugin.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2018-04-04T19:13:14Z",
+      "side": 1,
+      "message": "In the blueprint, this was replaced by\n\nwriterfqdn: { get_input: k8s_pgaas_instance_fqdn }\n\nDo these comments need to be changed? Can I do that in a separate merge?",
+      "parentUuid": "5a93c517_22006300",
       "revId": "01e3a9758f4ea08108dcefb8bc64466eed4cfc14",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
