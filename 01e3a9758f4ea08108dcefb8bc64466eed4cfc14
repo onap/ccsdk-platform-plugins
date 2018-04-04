@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_ae2a1f8e",
+        "filename": "pgaas/pgaas/logginginterface.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 511
+      },
+      "writtenOn": "2018-04-04T12:18:15Z",
+      "side": 1,
+      "message": "The log record being written as \"msg\" to the log file is incomplete.  The ctx.logger.* methods provide important additional information when they write a record--like the node instance, the operation that\u0027s being performed, etc.   The log file is also incomplete because it does not contain the records dropped by the Cloudify process that\u0027s calling into the plugin.  In short, the log file that\u0027s being written here is of extremely limited value.",
+      "revId": "01e3a9758f4ea08108dcefb8bc64466eed4cfc14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e2091b2d",
+        "filename": "pgaas/pgaas/pgaas_plugin.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 511
+      },
+      "writtenOn": "2018-04-04T12:18:15Z",
+      "side": 1,
+      "message": "Is this still needed in R2?",
+      "revId": "01e3a9758f4ea08108dcefb8bc64466eed4cfc14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_22006300",
+        "filename": "pgaas/pgaas/pgaas_plugin.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 511
+      },
+      "writtenOn": "2018-04-04T12:18:15Z",
+      "side": 1,
+      "message": "What is the location prefix?  I understand where it came from  in R1 (it was related to the use of the Designate DNS service), but don\u0027t know how it fits in R2.",
+      "revId": "01e3a9758f4ea08108dcefb8bc64466eed4cfc14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
