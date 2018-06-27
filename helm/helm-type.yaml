@@ -1,0 +1,129 @@
+# ============LICENSE_START==========================================
+# ===================================================================
+# Copyright (c) 2017 AT&T
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#============LICENSE_END============================================
+
+plugins:
+  helm-plugin:
+    executor: central_deployment_agent
+    package_name: onap-helm-plugin
+    package_version: 2.2.0
+
+node_types:
+
+  onap.nodes.component:
+    derived_from: cloudify.nodes.Root
+    properties:
+      tiller-server-ip:
+        description: IP of tiller server
+        type: string
+      tiller-server-port:
+        default: local
+        description: Port of tiller server
+        type: string
+      chart-repo-url:
+        default: local
+        description: helm chart repo url
+        type: string
+      component-name:
+        description: onap component string
+        type: string
+      chart-version:
+        description: helm chart version
+        type: string
+      config-dir:
+        description: config file dir
+        default: '/opt/manager/resources/'
+        type: string
+      namespace:
+        description: k8s namespace
+        default: onap
+      config:
+        description: String format config file
+        type: string
+        default: ''
+      config-url:
+        description: String format config file url
+        type: string
+        default: ''
+      runtime-config:
+        default: ''
+        description: String format json object. To save the runtime config generate from other nodes.
+      tls-enable:
+        description: enable helm TSL
+        type: boolean
+        default: false
+      ca:
+        description: value of ca.pem
+        type: string
+        default: ''
+      cert:
+        description:  value of cert.pem
+        type: string
+        default: ''
+      key:
+        description:  value of key.pem
+        type: string
+        default: ''
+      stable-repo-url:
+        description:   URL for stable repository
+        type: string
+        default: 'https://kubernetes-charts.storage.googleapis.com'
+
+      # This part should handel by Blueprint not plugin
+      # the default docker values points to ONAP nexus3 docker repo.
+      # If need point to other private docker repo you can overrite it in blueprint node templates .
+#      docker-server:
+#        description: Private Docker Registry FQDN.
+#        default: nexus3.onap.org:10001
+#      docker-username:
+#        description: Docker username.
+#        default: docker
+#      docker-password:
+#        description: Docker password.
+#        default: docker
+
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        configure: helm-plugin.plugin.tasks.config
+        start: helm-plugin.plugin.tasks.start
+        stop: helm-plugin.plugin.tasks.stop
+        upgrade: helm-plugin.plugin.tasks.upgrade
+        rollback: helm-plugin.plugin.tasks.rollback
+
+
+workflows:
+  upgrade:
+    mapping: helm-plugin.plugin.workflows.upgrade
+    parameters:
+      node_instance_id:
+        description: The id of the node-instance that you want to modify.
+      config_json:
+        description: The changes to the new config json
+        default: ''
+      config_json_url:
+        description: The changes to the new config json url
+        default: ''
+      chartVersion:
+        description: chart version
+      chartRepo:
+        description: chart repo url
+  rollback:
+    mapping: helm-plugin.plugin.workflows.rollback
+    parameters:
+      node_instance_id:
+        description: The id of the node-instance that you want to modify.
+      revision:
+        description: Check the node runtime property history, find the revision number you want to rollback to
