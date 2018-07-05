@@ -24,7 +24,7 @@ setup(
 
     # Do not use underscores in the plugin name.
     name='onap-helm-plugin',
-    version='2.2.0',
+    version='2.3.0',
     author='Nicolas Hu(AT&T)',
     author_email='jh245g@att.com',
     description='This plugin will install/uninstall/upgrade/rollback helm charts of ONAP components. ',

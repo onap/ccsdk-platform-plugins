@@ -20,9 +20,10 @@ from cloudify.workflows import ctx
 from cloudify.exceptions import NonRecoverableError
 import urllib2
 import json
+import yaml
 
 @workflow
-def upgrade(node_instance_id,config_json,config_json_url,chartVersion,chartRepo,**kwargs):
+def upgrade(node_instance_id,config_json,config_url,config_format,chartVersion,chartRepo,**kwargs):
     node_instance = ctx.get_node_instance(node_instance_id)
 
     if not node_instance_id:
@@ -31,13 +32,18 @@ def upgrade(node_instance_id,config_json,config_json_url,chartVersion,chartRepo,
                 node_instance_id))
 
     kwargs = {}
-    if config_json == '' and config_json_url == '':
-    	kwargs['config'] = config_json
-    elif config_json == '' and config_json_url != '':
-        response = urllib2.urlopen(config_json_url)
-        kwargs['config'] = json.load(response)
-    elif config_json != '' and config_json_url == '':
-    	kwargs['config'] = config_json
+    if config_json == '' and config_url == '':
+         kwargs['config'] = config_json
+    elif config_json == '' and config_url != '':
+         response = urllib2.urlopen(config_url)
+    if config_format == 'json':
+         kwargs['config'] = json.load(response)
+    elif config_format == 'yaml':
+         kwargs['config'] = yaml.load(response)
+    else:
+         raise NonRecoverableError("Unable to get config input format")
+    elif config_json != '' and config_url == '':
+         kwargs['config'] = config_json
     else:
         raise NonRecoverableError("Unable to get Json config input")
 

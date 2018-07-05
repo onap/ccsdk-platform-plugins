@@ -19,7 +19,7 @@ plugins:
   helm-plugin:
     executor: central_deployment_agent
     package_name: onap-helm-plugin
-    package_version: 2.2.0
+    package_version: 2.3.0
 
 node_types:
 
@@ -58,6 +58,10 @@ node_types:
         description: String format config file url
         type: string
         default: ''
+      config-format:
+        description: String format config file format
+        type: string
+        default: 'json'
       runtime-config:
         default: ''
         description: String format json object. To save the runtime config generate from other nodes.
@@ -113,9 +117,12 @@ workflows:
       config_json:
         description: The changes to the new config json
         default: ''
-      config_json_url:
-        description: The changes to the new config json url
+      config_url:
+        description: The config input url
         default: ''
+      config_format:
+        description: The config url input format
+        default: 'json'
       chartVersion:
         description: chart version
       chartRepo:

@@ -146,7 +146,8 @@ def config(**kwargs):
     # create helm value file on K8s master
     #configPath = ctx.node.properties['config-path']
     configJson = str(ctx.node.properties['config'])
-    configJsonUrl = str(ctx.node.properties['config-url'])
+    configUrl = str(ctx.node.properties['config-url'])
+    configUrlInputFormat = str(ctx.node.properties['config-format'])
     runtime_config = str(ctx.node.properties['runtime-config'])  #json
     componentName = ctx.node.properties['component-name']
     config_dir_root= str(ctx.node.properties['config-dir'])
@@ -183,12 +184,17 @@ def config(**kwargs):
     ctx.logger.debug(configPath)
 
     configObj ={}
-    if configJson == '' and configJsonUrl == '':
+    if configJson == '' and configUrl == '':
         ctx.logger.debug("Will use default HELM value")
-    elif configJson == '' and configJsonUrl != '':
-        response = urllib2.urlopen(configJsonUrl)
-        configObj = json.load(response)
-    elif configJson != '' and configJsonUrl == '':
+    elif configJson == '' and configUrl != '':
+        response = urllib2.urlopen(configUrl)
+        if configUrlInputFormat == 'json':
+             configObj = json.load(response)
+        elif configUrlInputFormat == 'yaml':
+             configObj = yaml.load(response)
+        else:
+            raise NonRecoverableError("Unable to get config input format.")
+    elif configJson != '' and configUrl == '':
         configObj = json.loads(configJson)
     else:
         raise NonRecoverableError("Unable to get Json config input")
@@ -222,14 +228,14 @@ def start(**kwargs):
     configPath=config_dir_root+str(ctx.deployment.id)+'/'+componentName+'.yaml'
     namespace = ctx.node.properties['namespace']
     configJson = str(ctx.node.properties['config'])
-    configJsonUrl = str(ctx.node.properties['config-url'])
+    configUrl = str(ctx.node.properties['config-url'])
     runtimeconfigJson =  str(ctx.node.properties['runtime-config'])
 
 
     chart = chartRepo + "/" + componentName + "-" + chartVersion + ".tgz"
     chartName = namespace + "-" + componentName
 
-    if configJson == '' and runtimeconfigJson == '' and configJsonUrl == '':
+    if configJson == '' and runtimeconfigJson == '' and configUrl == '':
         installCommand = 'helm install '+ chart + ' --name ' + chartName + ' --namespace ' + namespace+tiller_host()+tls()
     else:
         installCommand = 'helm install ' + chart + ' --name ' + chartName + ' --namespace ' + namespace + ' -f '+ configPath +tiller_host()+tls()
