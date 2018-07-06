@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#============LICENSE_END============================================
+# ============LICENSE_END============================================
 
 
 from setuptools import setup
@@ -27,7 +27,8 @@ setup(
     version='2.3.0',
     author='Nicolas Hu(AT&T)',
     author_email='jh245g@att.com',
-    description='This plugin will install/uninstall/upgrade/rollback helm charts of ONAP components. ',
+    description='This plugin will install/uninstall/upgrade/rollback helm '
+                'charts of ONAP components. ',
 
     # This must correspond to the actual packages in the plugin.
     packages=['plugin'],

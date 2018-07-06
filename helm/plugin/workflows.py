@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#============LICENSE_END============================================
+# ============LICENSE_END============================================
 
 from cloudify.decorators import workflow
 from cloudify.workflows import ctx
@@ -22,8 +22,10 @@ import urllib2
 import json
 import yaml
 
+
 @workflow
-def upgrade(node_instance_id,config_json,config_url,config_format,chartVersion,chartRepo,**kwargs):
+def upgrade(node_instance_id, config_json, config_url, config_format,
+            chartVersion, chartRepo, **kwargs):
     node_instance = ctx.get_node_instance(node_instance_id)
 
     if not node_instance_id:
@@ -33,29 +35,30 @@ def upgrade(node_instance_id,config_json,config_url,config_format,chartVersion,c
 
     kwargs = {}
     if config_json == '' and config_url == '':
-         kwargs['config'] = config_json
+        kwargs['config'] = config_json
     elif config_json == '' and config_url != '':
-         response = urllib2.urlopen(config_url)
-    if config_format == 'json':
-         kwargs['config'] = json.load(response)
-    elif config_format == 'yaml':
-         kwargs['config'] = yaml.load(response)
-    else:
-         raise NonRecoverableError("Unable to get config input format")
+        response = urllib2.urlopen(config_url)
+        if config_format == 'json':
+            kwargs['config'] = json.load(response)
+        elif config_format == 'yaml':
+            kwargs['config'] = yaml.load(response)
+        else:
+            raise NonRecoverableError("Unable to get config input format")
     elif config_json != '' and config_url == '':
-         kwargs['config'] = config_json
+        kwargs['config'] = config_json
+
     else:
         raise NonRecoverableError("Unable to get Json config input")
 
-    kwargs['chart_version'] = str(chartVersion)
-    kwargs['chart_repo'] = str(chartRepo)
-    operation_args = {'operation': 'upgrade',}
-    operation_args['kwargs'] = kwargs
-    node_instance.execute_operation(**operation_args)
+kwargs['chart_version'] = str(chartVersion)
+kwargs['chart_repo'] = str(chartRepo)
+operation_args = {'operation': 'upgrade', }
+operation_args['kwargs'] = kwargs
+node_instance.execute_operation(**operation_args)
 
 
 @workflow
-def rollback(node_instance_id,revision,**kwargs):
+def rollback(node_instance_id, revision, **kwargs):
     node_instance = ctx.get_node_instance(node_instance_id)
 
     if not node_instance_id:
@@ -65,6 +68,6 @@ def rollback(node_instance_id,revision,**kwargs):
 
     kwargs = {}
     kwargs['revision'] = str(revision)
-    operation_args = {'operation': 'rollback',}
+    operation_args = {'operation': 'rollback', }
     operation_args['kwargs'] = kwargs
     node_instance.execute_operation(**operation_args)
