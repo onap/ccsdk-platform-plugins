@@ -50,11 +50,11 @@ def upgrade(node_instance_id, config_json, config_url, config_format,
     else:
         raise NonRecoverableError("Unable to get Json config input")
 
-kwargs['chart_version'] = str(chartVersion)
-kwargs['chart_repo'] = str(chartRepo)
-operation_args = {'operation': 'upgrade', }
-operation_args['kwargs'] = kwargs
-node_instance.execute_operation(**operation_args)
+    kwargs['chart_version'] = str(chartVersion)
+    kwargs['chart_repo'] = str(chartRepo)
+    operation_args = {'operation': 'upgrade', }
+    operation_args['kwargs'] = kwargs
+    node_instance.execute_operation(**operation_args)
 
 
 @workflow
