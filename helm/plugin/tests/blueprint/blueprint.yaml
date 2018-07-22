@@ -16,27 +16,59 @@ inputs:
     test_input:
         description: an input for the test
         default: default_test_input
+    tiller-server-ip:
+        default: 1.1.1.1
+    tiller-server-port:
+        default: 8888
+    namespace:
+        default: onap
+    chart-repo-url:
+        default: local
+    chart-version :
+        default: 2.0.0
+    jsonConfig:
+        default: ''
+    config-url:
+        default: ''
+    config-format:
+        default: 'json'
+    tls-enable:
+        type: boolean
+        default: false
+    config-dir:
+        type: string
+        default: './'
+    stable-repo-url:
+        type: string
+        default: 'http://0.0.0.0/stable'
+
 
 node_templates:
     # defining a single node template that will serve as our test node
-    test_node_template:
+    test_node:
         # using base cloudify type
-        type: cloudify.nodes.Root
-        interfaces:
-            cloudify.interfaces.lifecycle:
-                start:
-                    # here we map the single plugin task to the start operation
-                    # of the cloudify.interfaces.lifecycle interface
-                    implementation: plugin_name.plugin.tasks.my_task
-                    inputs:
-                        # my_task accepts a single property named
-                        # some property. Here we inject this property
-                        # from the input provided by the test
-                        # (or 'default_test_input' if no input was provided)
-                        some_property: { get_input: test_input }
+        type: onap.nodes.component
+        properties:
+            tiller-server-ip: { get_input: tiller-server-ip }
+            tiller-server-port: { get_input: tiller-server-port }
+            component-name: test_node
+            chart-repo-url: { get_input: chart-repo-url }
+            chart-version: { get_input: chart-version }
+            namespace: { get_input: namespace }
+            config: { get_input: jsonConfig}
+            config-url: { get_input: config-url}
+            config-format: { get_input: config-format}
+            tls-enable: { get_input: tls-enable}
+            ca: { get_secret: ca_value}
+            cert: { get_secret: cert_value}
+            key: { get_secret: key_value}
+            config-dir: { get_input: config-dir}
+            stable-repo-url: { get_input: stable-repo-url}
 
 outputs:
     # example output the could be used to simplify assertions by test
     test_output:
         description: an output for the test
-        value: { get_attribute: [test_node_template, some_property] }
+        value:
+            helm-value: { get_attribute: [test_node, current-helm-value] }
+            helm-history: { get_attribute: [test_node, helm-history] }
