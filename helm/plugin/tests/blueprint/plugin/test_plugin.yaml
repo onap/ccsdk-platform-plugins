@@ -1,20 +1,125 @@
+# ============LICENSE_START==========================================
+# ===================================================================
+# Copyright (c) 2017 AT&T
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#============LICENSE_END============================================
+
 plugins:
-    # Name could be anything, this name is what appears on the beginning of operation
-    # mappings.
-    plugin_name:
-        # Could be 'central_deployment_agent' or 'host_agent'.
-        # If 'central_deployment_agent', this plugin will be executed on the
-        # deployment dedicated agent, other wise it will be executed on the host agent.
-        # We set it the 'central_deployment_agent' here because 'host_agent' plugins should
-        # be contained in a host and this is not required for testing purposes
-        executor: central_deployment_agent
+  helm-plugin:
+    executor: central_deployment_agent
+    package_name: helm
+    install: false
 
-        # Setting install to false in testing environment. In the non-test plugin definition
-        # this property could be omitted usually (its default is true), in which case
-        # the source property should be set
-        install: false
+node_types:
 
-        # source: URL to archive containing the plugin or name of directory containing
-        #         the plugin if it is included in the the blueprint directory under the
-        #         "plugins" directory. Not required in testing environments as the plugin
-        #         need not be installed on any agent
+  onap.nodes.component:
+    derived_from: cloudify.nodes.Root
+    properties:
+      tiller-server-ip:
+        description: IP of tiller server
+        type: string
+      tiller-server-port:
+        default: local
+        description: Port of tiller server
+        type: string
+      chart-repo-url:
+        default: local
+        description: helm chart repo url
+        type: string
+      component-name:
+        description: onap component string
+        type: string
+      chart-version:
+        description: helm chart version
+        type: string
+      config-dir:
+        description: config file dir
+        default: '/opt/manager/resources/'
+        type: string
+      namespace:
+        description: k8s namespace
+        default: onap
+      config:
+        description: String format config file
+        type: string
+        default: ''
+      config-url:
+        description: String format config file url
+        type: string
+        default: ''
+      config-format:
+        description: String format config file format
+        type: string
+        default: 'json'
+      runtime-config:
+        default: ''
+        description: String format json object. To save the runtime config generate from other nodes.
+      tls-enable:
+        description: enable helm TSL
+        type: boolean
+        default: false
+      ca:
+        description: value of ca.pem
+        type: string
+        default: ''
+      cert:
+        description:  value of cert.pem
+        type: string
+        default: ''
+      key:
+        description:  value of key.pem
+        type: string
+        default: ''
+      stable-repo-url:
+        description:   URL for stable repository
+        type: string
+        default: 'https://kubernetes-charts.storage.googleapis.com'
+
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        configure: helm-plugin.plugin.tasks.config
+        start: helm-plugin.plugin.tasks.start
+        stop: helm-plugin.plugin.tasks.stop
+        upgrade: helm-plugin.plugin.tasks.upgrade
+        rollback: helm-plugin.plugin.tasks.rollback
+
+
+workflows:
+  upgrade:
+    mapping: helm-plugin.plugin.workflows.upgrade
+    parameters:
+      node_instance_id:
+        description: The id of the node-instance that you want to modify.
+      config_json:
+        description: The changes to the new config json
+        default: ''
+      config_url:
+        description: The config input url
+        default: ''
+      config_format:
+        description: The config url input format
+        default: 'json'
+      chartVersion:
+        description: chart version
+      chartRepo:
+        description: chart repo url
+  rollback:
+    mapping: helm-plugin.plugin.workflows.rollback
+    parameters:
+      node_instance_id:
+        description: The id of the node-instance that you want to modify.
+        default: 'node_instance_id'
+      revision:
+        description: Check the node runtime property history, find the revision number you want to rollback to
+        default: 1
