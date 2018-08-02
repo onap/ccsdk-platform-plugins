@@ -30,6 +30,7 @@ from cloudify.exceptions import OperationRetry
 from cloudify_rest_client.exceptions import CloudifyClientError
 import pip
 import json
+import base64
 import yaml
 import urllib2
 from cloudify.decorators import operation
@@ -71,10 +72,12 @@ def configure_admin_conf():
     admin_file_dest = os.path.join(os.path.expanduser('~'), 'admin.conf')
 
     execute_command(
-        'sudo cp {0} {1}'.format('/etc/kubernetes/admin.conf', admin_file_dest))
+        'sudo cp {0} {1}'.format('/etc/kubernetes/admin.conf',
+                                 admin_file_dest))
     execute_command('sudo chown {0}:{1} {2}'.format(uid, gid, admin_file_dest))
 
-    with open(os.path.join(os.path.expanduser('~'), '.bashrc'), 'a') as outfile:
+    with open(os.path.join(os.path.expanduser('~'), '.bashrc'),
+              'a') as outfile:
         outfile.write('export KUBECONFIG=$HOME/admin.conf')
     os.environ['KUBECONFIG'] = admin_file_dest
 
@@ -87,7 +90,8 @@ def get_current_helm_value(chart_name):
     if str_to_bool(ctx.node.properties['tls-enable']):
         getValueCommand = subprocess.Popen(
             ["helm", "get", "values", "-a", chart_name, '--host', tiller_host,
-             '--tls', '--tls-ca-cert', config_dir + 'ca.cert.pem', '--tls-cert',
+             '--tls', '--tls-ca-cert', config_dir + 'ca.cert.pem',
+             '--tls-cert',
              config_dir + 'helm.cert.pem', '--tls-key',
              config_dir + 'helm.key.pem'], stdout=subprocess.PIPE)
     else:
@@ -216,7 +220,18 @@ def config(**kwargs):
     if configJson == '' and configUrl == '':
         ctx.logger.debug("Will use default HELM value")
     elif configJson == '' and configUrl != '':
-        response = urllib2.urlopen(configUrl)
+        if configUrl.find("@"):
+            head, end = configUrl.rsplit('@', 1)
+            head, auth = head.rsplit('//', 1)
+            configUrl = head + '//' + end
+            username, password = auth.rsplit(':', 1)
+            request = urllib2.Request(configUrl)
+            base64string = base64.encodestring(
+                '%s:%s' % (username, password)).replace('\n', '')
+            request.add_header("Authorization", "Basic %s" % base64string)
+            response = urllib2.urlopen(request)
+        else:
+            response = urllib2.urlopen(configUrl)
         if configUrlInputFormat == 'json':
             configObj = json.load(response)
         elif configUrlInputFormat == 'yaml':
@@ -293,10 +308,11 @@ def stop(**kwargs):
     # Delete helm chart
     command = 'helm delete --purge ' + chartName + tiller_host() + tls()
     output = execute_command(command)
-    config_dir = config_dir_root + str(ctx.deployment.id)
-    shutil.rmtree(config_dir)
     if output == False:
         raise NonRecoverableError("helm delete failed")
+    config_file = config_dir_root + str(
+        ctx.deployment.id) + '/' + component + '.yaml'
+    os.remove(config_file)
 
 
 @operation
@@ -322,7 +338,7 @@ def upgrade(**kwargs):
         with open(configPath, 'w') as outfile:
             yaml.safe_dump(configJson, outfile, default_flow_style=False)
         # configure_admin_conf()
-        upgradeCommand = 'helm upgrade ' + chartName + ' ' + chart + ' -f ' +\
+        upgradeCommand = 'helm upgrade ' + chartName + ' ' + chart + ' -f ' + \
                          configPath + tiller_host() + tls()
     output = execute_command(upgradeCommand)
     if output == False:

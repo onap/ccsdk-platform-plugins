@@ -21,6 +21,7 @@ from cloudify.exceptions import NonRecoverableError
 import urllib2
 import json
 import yaml
+import base64
 
 
 @workflow
@@ -37,7 +38,18 @@ def upgrade(node_instance_id, config_json, config_url, config_format,
     if config_json == '' and config_url == '':
         kwargs['config'] = config_json
     elif config_json == '' and config_url != '':
-        response = urllib2.urlopen(config_url)
+        if config_url.find("@"):
+            head, end = config_url.rsplit('@', 1)
+            head, auth = head.rsplit('//', 1)
+            config_url = head + '//' + end
+            username, password = auth.rsplit(':', 1)
+            request = urllib2.Request(config_url)
+            base64string = base64.encodestring(
+                '%s:%s' % (username, password)).replace('\n', '')
+            request.add_header("Authorization", "Basic %s" % base64string)
+            response = urllib2.urlopen(request)
+        else:
+            response = urllib2.urlopen(config_url)
         if config_format == 'json':
             kwargs['config'] = json.load(response)
         elif config_format == 'yaml':
