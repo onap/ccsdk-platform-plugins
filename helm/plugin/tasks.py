@@ -220,7 +220,7 @@ def config(**kwargs):
     if configJson == '' and configUrl == '':
         ctx.logger.debug("Will use default HELM value")
     elif configJson == '' and configUrl != '':
-        if configUrl.find("@"):
+        if configUrl.find("@") != -1:
             head, end = configUrl.rsplit('@', 1)
             head, auth = head.rsplit('//', 1)
             configUrl = head + '//' + end

@@ -38,7 +38,7 @@ def upgrade(node_instance_id, config_json, config_url, config_format,
     if config_json == '' and config_url == '':
         kwargs['config'] = config_json
     elif config_json == '' and config_url != '':
-        if config_url.find("@"):
+        if config_url.find("@") != -1:
             head, end = config_url.rsplit('@', 1)
             head, auth = head.rsplit('//', 1)
             config_url = head + '//' + end
