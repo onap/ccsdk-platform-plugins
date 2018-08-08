@@ -34,8 +34,9 @@ class TestPlugin(unittest.TestCase):
                    resources_to_copy=[(path.join('blueprint', 'plugin',
                                                  'test_plugin.yaml'),
                                        'plugin')])
+    @mock.patch('plugin.tasks.os.remove')
     @mock.patch('plugin.tasks.execute_command')
-    def test_stop(self, cfy_local, mock_execute_command):
+    def test_stop(self, cfy_local, mock_execute_command, mock_os_remove):
         # execute install workflow
         """
 

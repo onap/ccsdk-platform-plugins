@@ -35,6 +35,7 @@ limitations under the License.
      <module>sshkeyshare</module>
      <module>pgaas</module>
      <module>dnsdesig</module>
+     <module>helm</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -18,8 +18,8 @@
 plugins:
   helm-plugin:
     executor: central_deployment_agent
-    package_name: onap-helm-plugin
-    package_version: 2.3.0
+    package_name: helm
+    package_version: 2.3.1
 
 node_types:
 
