@@ -39,9 +39,9 @@ limitations under the License.
     <!-- path to directory containing the setup.py relative to this file -->
     <plugin.subdir>.</plugin.subdir>
     <!-- path of types file itself relative to this file -->
-    <typefile.source>helm_types.yaml</typefile.source>
+    <typefile.source>helm-type.yaml</typefile.source>
     <!-- path, in repo, to store type file -->
-    <typefile.dest>type_files/helm/1.1.0/helm_types.yaml</typefile.dest>
+    <typefile.dest>type_files/helm/1.1.0/helm-type.yaml</typefile.dest>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.sources>.</sonar.sources>
     <sonar.junit.reportsPath>nosetests.xml</sonar.junit.reportsPath>
