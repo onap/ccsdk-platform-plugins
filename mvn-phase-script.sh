@@ -86,6 +86,7 @@ test)
     virtualenv .testenv
     . .testenv/bin/activate
     pip install --upgrade pip
+    pip install -U setuptools
     pip install tox
     (cd $PLUGIN_SUBDIR; tox)
     deactivate
@@ -101,6 +102,7 @@ package)
   virtualenv .pkgenv
   . .pkgenv/bin/activate
   pip install --upgrade pip
+  pip install -U setuptools
   pip install wagon
   wagon create --format tar.gz $PLUGIN_SUBDIR
   deactivate
