@@ -121,7 +121,7 @@ class TestPlugin(unittest.TestCase):
         """
         node_instance_id = 'node_instance_id'
         config_json = ''
-        config_url = ''
+        config_url = 'http://test:test@11.22.33.44:80/stable'
         config_format = 'json'
         chartVersion = '2.0.0'
         chartRepo = 'repo'
