@@ -24,7 +24,7 @@ setup(
 
     # Do not use underscores in the plugin name.
     name='helm',
-    version='2.3.1',
+    version='3.0.0',
     author='Nicolas Hu(AT&T)',
     author_email='jh245g@att.com',
     description='This plugin will install/uninstall/upgrade/rollback helm '
