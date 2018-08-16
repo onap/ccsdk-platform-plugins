@@ -49,7 +49,8 @@ function setnetrc {
   hostport=$(echo $1 | cut -f3 -d /)
   host=$(echo $hostport | cut -f1 -d:)
   settings=${SETTINGS_FILE:-$HOME/.m2/settings.xml}
-  echo machine $host login $(xpath -q -e "//servers/server[id='$serverid']/username/text()" $settings) password $(xpath -q -e "//servers/server[id='$serverid']/password/text()" $settings) >$HOME/.netrc
+  # echo machine $host login $(xpath -q -e "//servers/server[id='$serverid']/username/text()" $settings) password $(xpath -q -e "//servers/server[id='$serverid']/password/text()" $settings) >$HOME/.netrc
+  echo machine $host login $(xpath $settings "//servers/server[id='$serverid']/username/text()") password $(xpath $settings "//servers/server[id='$serverid']/password/text()") >$HOME/.netrc
   chmod 600 $HOME/.netrc
   set -x
 }
