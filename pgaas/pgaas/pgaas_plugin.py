@@ -16,6 +16,8 @@
 # limitations under the License.
 # ============LICENSE_END======================================================
 
+from __future__ import print_function
+
 from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError
@@ -228,7 +230,7 @@ def rootdesc(data, dbname, initialpassword=None):
     'host': hostportion(data['rw']),
     'port': portportion(data['rw']),
     'user': 'postgres',
-    'password': initialpassword if initialpassword else getpass(data, 'postgres')
+    'password': initialpassword if initialpassword else getpass(data, 'postgres', data['rw'], 'postgres')
   }
 
 def rootconn(data, dbname='postgres', initialpassword=None):
@@ -250,7 +252,7 @@ def onedesc(data, dbname, role, access):
     'host': hostportion(data[access]),
     'port': portportion(data[access]),
     'user': user,
-    'password': getpass(data, user)
+    'password': getpass(data, user, data['rw'], dbname)
   }
 
 def dbdescs(data, dbname):
@@ -263,12 +265,26 @@ def dbdescs(data, dbname):
     'viewer': onedesc(data, dbname, 'viewer', 'ro')
   }
 
-def getpass(data, ident):
+def getpass(data, ident, hostport, dbname):
   """
   generate the password for a given user on a specific server
   """
   m = hashlib.sha256()
   m.update(ident)
+
+  # mix in the seed (the last line) for that database, if one exists
+  hostport = hostport.lower()
+  dbname = dbname.lower()
+  hostPortDbname = '{0}/pgaas/{1}:{2}'.format(OPT_MANAGER_RESOURCES, hostport, dbname)
+  try:
+    lastLine = ''
+    with open(hostPortDbname, "r") as fp:
+      for line in fp:
+        lastLine = line.strip()
+    m.update(line)
+  except IOError:
+    pass
+
   m.update(base64.b64decode(data['data']))
   return m.hexdigest()
 
@@ -290,7 +306,7 @@ def chkfqdn(fqdn):
   verify that a FQDN is valid
   """
   hp = hostportion(fqdn)
-  pp = portportion(fqdn)
+  # not needed right now: pp = portportion(fqdn)
   # TODO need to augment this for IPv6 addresses
   return re.match('^[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$', hp) is not None
 
@@ -317,15 +333,15 @@ def getclusterinfo(wfqdn, reuse, rfqdn, initialpassword, related):
     if len(related) != 0:
       raiseNonRecoverableError('Cluster SSH keypair must not be specified when using an existing cluster')
     try:
-      fn = '{0}/pgaas/{1}'.format(OPT_MANAGER_RESOURCES, wfqdn).lower()
-      with open('{0}/pgaas/{1}'.format(OPT_MANAGER_RESOURCES, wfqdn).lower(), 'r') as f:
+      fn = '{0}/pgaas/{1}'.format(OPT_MANAGER_RESOURCES, wfqdn.lower())
+      with open(fn, 'r') as f:
         data = json.load(f)
         data['rw'] = wfqdn
         return data
     except Exception as e:
       warn("Error: {0}".format(e))
       warn("Stack: {0}".format(traceback.format_exc()))
-      raiseNonRecoverableError('Cluster must be deployed when using an existing cluster: fqdn={0}, err={1}'.format(safestr(wfqdn),e))
+      raiseNonRecoverableError('Cluster must be deployed when using an existing cluster. Check your domain name: fqdn={0}, err={1}'.format(safestr(wfqdn),e))
   if rfqdn == '':
     rfqdn = wfqdn
   elif not chkfqdn(rfqdn):
@@ -339,17 +355,17 @@ def getclusterinfo(wfqdn, reuse, rfqdn, initialpassword, related):
   except:
     pass
   try:
-    with open('{0}/pgaas/{1}'.format(OPT_MANAGER_RESOURCES, wfqdn).lower(), 'w') as f:
+    with open('{0}/pgaas/{1}'.format(OPT_MANAGER_RESOURCES, wfqdn.lower()), 'w') as f:
       f.write(json.dumps(data))
   except Exception as e:
     warn("Error: {0}".format(e))
     warn("Stack: {0}".format(traceback.format_exc()))
-    raiseNonRecoverableError('Cannot write cluster information to {0}/pgaas: fqdn={1}, err={2}'.format(OPT_MANAGER_RESOURCES, safestr(wfqdn),e))
+    raiseNonRecoverableError('Cannot write cluster information to {0}/pgaas: fqdn={1}, err={2}'.format(OPT_MANAGER_RESOURCES, safestr(wfqdn), e))
   data['rw'] = wfqdn
   if initialpassword:
     with rootconn(data, initialpassword=initialpassword) as conn:
       crr = conn.cursor()
-      dbexecute(crr, "ALTER USER postgres WITH PASSWORD %s", (getpass(data, 'postgres'),))
+      dbexecute(crr, "ALTER USER postgres WITH PASSWORD %s", (getpass(data, 'postgres', wfqdn, 'postgres'),))
       crr.close()
   return(data)
 
@@ -368,7 +384,7 @@ def add_pgaas_cluster(**kwargs):
                           find_related_nodes('dcae.relationships.pgaas_cluster_uses_sshkeypair'))
     ctx.instance.runtime_properties['public'] = data['pubkey']
     ctx.instance.runtime_properties['base64private'] = data['data']
-    # ctx.instance.runtime_properties['postgrespswd'] = getpass(data, 'postgres')
+    # not needed right now: ctx.instance.runtime_properties['postgrespswd'] = getpass(data, 'postgres', ctx.node.properties['writerfqdn'], 'postgres')
     warn('All done')
   except Exception as e:
     ctx.logger.warn("Error: {0}".format(e))
@@ -511,6 +527,59 @@ def delete_database(**kwargs):
       for r in [ usru, vwru, admu, cusr, cvwr ]:
         dbexecute(crx,'DROP ROLE IF EXISTS {0}'.format(r))
     warn('All gone')
+  except Exception as e:
+    ctx.logger.warn("Error: {0}".format(e))
+    ctx.logger.warn("Stack: {0}".format(traceback.format_exc()))
+    raise e
+
+@operation
+def update_database(**kwargs):
+  """
+  dcae.nodes.pgaas.database:
+  Update the password for a database from a cluster
+  """
+  try:
+    debug("update_database() invoked")
+    dbname = ctx.node.properties['name']
+    warn("update_database({0})".format(safestr(dbname)))
+    if not chkdbname(dbname):
+      return
+    debug('update_database(): dbname checked out')
+    if ctx.node.properties['use_existing']:
+      return
+    debug('update_database(): !use_existing')
+    hostport = ctx.node.properties['writerfqdn']
+    debug('update_database(): wfqdn={}'.format(hostport))
+    info = dbgetinfo(ctx)
+    debug('Got db server info')
+    hostPortDbname = '{0}/pgaas/{1}:{2}'.format(OPT_MANAGER_RESOURCES, hostport.lower(), dbname.lower())
+    debug('update_database(): hostPortDbname={}'.format(hostPortDbname))
+    try:
+        appended = False
+        with open(hostPortDbname, "a") as fp:
+            with open("/dev/urandom", "rb") as rp:
+                b = rp.read(16)
+                import binascii
+                print(binascii.hexlify(b).decode('utf-8'), file=fp)
+                appended = True
+        if not appended:
+            ctx.logger.warn("Error: the password for {} {} was not successfully changed".format(hostport, dbname))
+    except Exception as e:
+      ctx.logger.warn("Error: {0}".format(e))
+      ctx.logger.warn("Stack: {0}".format(traceback.format_exc()))
+      raise e
+
+    with rootconn(info) as conn:
+      crx = conn.cursor()
+      admu = ctx.instance.runtime_properties['admin']['user']
+      usru = ctx.instance.runtime_properties['user']['user']
+      vwru = ctx.instance.runtime_properties['viewer']['user']
+      cusr = '{0}_common_user_role'.format(dbname)
+      cvwr = '{0}_common_viewer_role'.format(dbname)
+      for r in [ usru, vwru, admu ]:
+        dbexecute(crx,"ALTER USER {} WITH PASSWORD '{}'".format(r, getpass(info, r, hostport, dbname)))
+
+    warn('All users updated for database {}'.format(dbname))
   except Exception as e:
     ctx.logger.warn("Error: {0}".format(e))
     ctx.logger.warn("Stack: {0}".format(traceback.format_exc()))

@@ -53,6 +53,7 @@ node_types:
       cloudify.interfaces.lifecycle:
         create: pgaas.pgaas.pgaas_plugin.create_database
         delete: pgaas.pgaas.pgaas_plugin.delete_database
+        update: pgaas.pgaas.pgaas_plugin.update_database
 
 relationships:
   dcae.relationships.pgaas_cluster_uses_sshkeypair:

@@ -31,6 +31,8 @@ from cloudify import ctx
 import sys, os
 sys.path.append(os.path.realpath(os.path.dirname(__file__)))
 
+TMPNAME = "/tmp/pgaas_plugin_tests"
+
 class MockKeyPair(object):
   def __init__(self, type_hierarchy=None, target=None):
     self._type_hierarchy = type_hierarchy
@@ -74,7 +76,7 @@ def _connect(h,p):
                        
 def set_mock_context(msg, monkeypatch):
   print("================ %s ================" % msg)
-  os.system("echo Before test; ls -l /tmp/pgaas") #### DELETE
+  os.system("exec >> {0}.out 2>&1; echo Before test".format(TMPNAME)) #### DELETE
   props = {
     'writerfqdn': 'test.bar.example.com',
     'use_existing': False,
@@ -106,18 +108,22 @@ def set_mock_context(msg, monkeypatch):
   current_ctx.set(mock_ctx)
   monkeypatch.setattr(socket.socket, 'connect', _connect)
   # monkeypatch.setattr(psycopg2, 'connect', _connect)
-  pgaas.pgaas_plugin.setOptManagerResources("/tmp")
+  pgaas.pgaas_plugin.setOptManagerResources(TMPNAME)
 
 
 
 @pytest.mark.dependency()
+def test_start(monkeypatch):
+  os.system("exec > {0}.out 2>&1; echo Before any test; rm -rf {0}; mkdir -p {0}".format(TMPNAME)) #### DELETE
+
+@pytest.mark.dependency(depends=['test_start'])
 def test_add_pgaas_cluster(monkeypatch):
   try:
     set_mock_context('test_add_pgaas_cluster', monkeypatch)
     pgaas.pgaas_plugin.add_pgaas_cluster(args={})
   finally:
     current_ctx.clear()
-    os.system("echo After test; ls -l /tmp/pgaas") #### DELETE
+    os.system("exec >> {0}.out 2>&1; echo After add_pgaas_cluster test; ls -lR {0}; head -1000 /dev/null {0}/pgaas/*;echo".format(TMPNAME)) #### DELETE
 
 @pytest.mark.dependency(depends=['test_add_pgaas_cluster'])
 def test_add_database(monkeypatch):
@@ -126,16 +132,25 @@ def test_add_database(monkeypatch):
     pgaas.pgaas_plugin.create_database(args={})
   finally:
     current_ctx.clear()
-    os.system("echo After test; ls -l /tmp/pgaas") #### DELETE
+    os.system("exec >> {0}.out 2>&1; echo After add_database test; ls -lR {0}; head -1000 /dev/null {0}/pgaas/*;echo".format(TMPNAME)) #### DELETE
 
 @pytest.mark.dependency(depends=['test_add_database'])
+def test_update_database(monkeypatch):
+  try:
+    set_mock_context('test_update_database', monkeypatch)
+    pgaas.pgaas_plugin.update_database(args={})
+  finally:
+    current_ctx.clear()
+    os.system("exec >> {0}.out 2>&1; echo After update_database test; ls -lR {0}; head -1000 /dev/null {0}/pgaas/*;echo".format(TMPNAME)) #### DELETE
+
+@pytest.mark.dependency(depends=['test_update_database'])
 def test_delete_database(monkeypatch):
   try:
     set_mock_context('test_delete_database', monkeypatch)
     pgaas.pgaas_plugin.delete_database(args={})
   finally:
     current_ctx.clear()
-    os.system("echo After test; ls -l /tmp/pgaas") #### DELETE
+    os.system("exec >> {0}.out 2>&1; echo After delete_database test; ls -lR {0}; head -1000 /dev/null {0}/pgaas/*;echo".format(TMPNAME)) #### DELETE
 
 @pytest.mark.dependency(depends=['test_delete_database'])
 def test_rm_pgaas_cluster(monkeypatch):
@@ -144,5 +159,5 @@ def test_rm_pgaas_cluster(monkeypatch):
     pgaas.pgaas_plugin.rm_pgaas_cluster(args={})
   finally:
     current_ctx.clear()
-    os.system("echo After test; ls -l /tmp/pgaas") #### DELETE
+    os.system("exec >> {0}.out 2>&1; echo After delete_database test; ls -lR {0}; head -1000 /dev/null {0}/pgaas/*;echo".format(TMPNAME)) #### DELETE
 
