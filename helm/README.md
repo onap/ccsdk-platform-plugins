@@ -1,5 +1,6 @@
 cloudify-plugin-template
 ========================
+testing commit status - will abandon
 
 [![Build Status](https://travis-ci.org/cloudify-cosmo/cloudify-plugin-template.svg?branch=master)](https://travis-ci.org/cloudify-cosmo/cloudify-plugin-template)
 
