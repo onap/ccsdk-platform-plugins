@@ -48,9 +48,12 @@ def execute_command(_command):
     }
 
     ctx.logger.debug('subprocess_args {0}.'.format(subprocess_args))
-
-    process = subprocess.Popen(**subprocess_args)
-    output, error = process.communicate()
+    try:
+        process = subprocess.Popen(**subprocess_args)
+        output, error = process.communicate()
+    except Exception as e:
+        ctx.logger.debug(str(e))
+        return False
 
     ctx.logger.debug('command: {0} '.format(_command))
     ctx.logger.debug('output: {0} '.format(output))
