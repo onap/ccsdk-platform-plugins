@@ -83,3 +83,13 @@ def rollback(node_instance_id, revision, **kwargs):
     operation_args = {'operation': 'rollback', }
     operation_args['kwargs'] = kwargs
     node_instance.execute_operation(**operation_args)
+
+@workflow
+def status(**kwargs):
+
+    for node in ctx.nodes:
+        for node_instance in node.instances:
+            kwargs = {}
+            operation_args = {'operation': 'status', }
+            operation_args['kwargs'] = kwargs
+            node_instance.execute_operation(**operation_args)

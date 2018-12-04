@@ -368,3 +368,22 @@ def rollback(**kwargs):
             retry_after=5)
     get_current_helm_value(chartName)
     get_helm_history(chartName)
+
+@operation
+def status(**kwargs):
+    componentName = ctx.node.properties['component-name']
+    namespace = ctx.node.properties['namespace']
+
+    chartName = namespace + "-" + componentName
+    statusCommand = 'helm status ' + chartName + tiller_host() + tls()
+    output = execute_command(statusCommand)
+    if output == False:
+        return ctx.operation.retry(
+            message='helm status failed, re-try after 5 second ',
+            retry_after=5)
+
+    status_output = [line.strip() for line in output.split('\n') if
+                            line.strip()]
+    for index in range(len(status_output)):
+        status_output[index] = status_output[index].replace('\t', ' ')
+    ctx.instance.runtime_properties['install-status'] = status_output

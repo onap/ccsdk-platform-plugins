@@ -19,7 +19,7 @@ plugins:
   helm-plugin:
     executor: central_deployment_agent
     package_name: helm
-    package_version: 3.0.0
+    package_version: 3.0.1
 
 node_types:
 
@@ -106,6 +106,7 @@ node_types:
         stop: helm-plugin.plugin.tasks.stop
         upgrade: helm-plugin.plugin.tasks.upgrade
         rollback: helm-plugin.plugin.tasks.rollback
+        status: helm-plugin.plugin.tasks.status
 
 
 workflows:
@@ -134,3 +135,6 @@ workflows:
         description: The id of the node-instance that you want to modify.
       revision:
         description: Check the node runtime property history, find the revision number you want to rollback to
+  status:
+    mapping: helm-plugin.plugin.workflows.status
+    parameters:
