@@ -59,7 +59,7 @@ def add_dr_publisher(**kwargs):
         feed_id = ctx.target.instance.runtime_properties["feed_id"]
         location = ctx.source.instance.runtime_properties[target_feed]["location"]
         username = random_string(8)
-        password = random_string(10)
+        password = random_string(16)
 
         # Make the request to add the publisher to the feed
         dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
@@ -81,7 +81,9 @@ def add_dr_publisher(**kwargs):
 
         # Set key in Consul
         ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
-        ch.add_to_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']), target_feed, ctx.source.instance.runtime_properties[target_feed])
+        cpy = dict(ctx.source.instance.runtime_properties[target_feed])
+        # cpy["password"] = pkcrypto.encrypt_string(cpy["password"])  # can't encrypt until collectors can decrypt
+        ch.add_to_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']), target_feed, cpy)
 
     except Exception as e:
         ctx.logger.error("Error adding publisher to feed: {er}".format(er=e))
@@ -173,7 +175,9 @@ def add_dr_subscriber(**kwargs):
 
         # Set key in Consul
         ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
-        ch.add_to_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']), target_feed, ctx.source.instance.runtime_properties[target_feed])
+        cpy = dict(ctx.source.instance.runtime_properties[target_feed])
+        # cpy["password"] = pkcrypto.encrypt_string(cpy["password"])  # can't encrypt until collectors can decrypt
+        ch.add_to_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']), target_feed, cpy)
 
     except Exception as e:
         ctx.logger.error("Error adding subscriber to feed: {er}".format(er=e))

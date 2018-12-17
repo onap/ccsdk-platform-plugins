@@ -19,10 +19,11 @@
 # Utility functions
 
 import string
-import random
+from random import SystemRandom
 
 def random_string(n):
     '''
     Create a random alphanumeric string, n characters long.
     '''
-    return ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for x in range(n))
+    secureRandomGen = SystemRandom()
+    return ''.join(secureRandomGen.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for x in range(n))

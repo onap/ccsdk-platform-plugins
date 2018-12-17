@@ -29,7 +29,8 @@ of this type may have.
 
 Property|Type|Required?|Description
 --------|----|---------|----------------------------------------
-feed_id|string|yes|Feed identifier assigned by DMaaP when the feed was created
+feed_id|string|no|Feed identifier assigned by DMaaP when the feed was created
+feed_name|string|no|a name that identifies the feed
 
 - `ccsdk.nodes.ExternalTargetFeed`:  This type represents a feed created in an external DMaaP
 environment (i.e., an environment that the plugin cannot access to make provisioning requests, such as
@@ -142,7 +143,7 @@ run against a blueprint that contains a node of this type.
 
 Property|Type|Required?|Description
 --------|----|---------|---------------------------------------
-topic_name|string|no|a name that uniquely identifies the feed (plugin will generate if absent)
+topic_name|string|no|a name that uniquely identifies the feed (plugin will generate if absent or is empty string or contain only whitespace)
 topic_description|string|no|human-readable description of the feed
 txenable|boolean|no|flag indicating whether transactions are enabled for this topic
 replication_case|string|no|type of replication required for the topic (defaults to no replication)
@@ -172,7 +173,8 @@ of this type may have.
 
 Property|Type|Required?|Description
 --------|----|---------|----------------------------------------
-fqtn|string|yes|fully-qualified topic name for the topic
+fqtn|string|no|fully-qualified topic name for the topic
+topic_name|string|no|a name that identifies the topic
 
 #### Interaction with Other Plugins
 When creating a new topic or processing a reference to an existing topic,

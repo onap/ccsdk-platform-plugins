@@ -113,6 +113,21 @@ class DMaaPControllerHandle(object):
         '''
         return self._get_resource("{0}/{1}".format(self.feeds_path, feed_id))
 
+    def get_feed_info_by_name(self, feed_name):
+        '''
+        Get the representation of the DMaaP data router feed whose feed name is feed_name.
+        '''
+        feeds = self._get_resource("{0}".format(self.feeds_path))
+        feed_list = feeds.json()
+        for feed in feed_list:
+            if feed["feedName"] == feed_name:
+                self.logger.info("Found feed with {0}".format(feed_name))
+                feed_id = feed["feedId"]
+                return self._get_resource("{0}/{1}".format(self.feeds_path, feed_id))
+
+        self.logger.info("feed_name {0} not found".format(feed_name))
+        return None
+
     def delete_feed(self, feed_id):
         '''
         Delete the DMaaP data router feed whose feed id is feed_id.
@@ -205,6 +220,21 @@ class DMaaPControllerHandle(object):
         '''
         return self._get_resource("{0}/{1}".format(self.topics_path, fqtn))
 
+    def get_topic_fqtn_by_name(self, topic_name):
+        '''
+        Get the representation of the DMaaP message router topic fqtn whose topic name is topic_name.
+        '''
+        topics = self._get_resource("{0}".format(self.topics_path))
+        topic_list = topics.json()
+        for topic in topic_list:
+            if topic["topicName"] == topic_name:
+                self.logger.info("Found existing topic with name {0}".format(topic_name))
+                fqtn = topic["fqtn"]
+                return fqtn
+
+        self.logger.info("topic_name {0} not found".format(topic_name))
+        return None
+
     def delete_topic(self, fqtn):
         '''
         Delete the topic whose fully qualified name is 'fqtn'
@@ -243,7 +273,6 @@ class DMaaPControllerHandle(object):
         '''
         Get the list of location names known to the DMaaP bus controller
         whose "dcaeLayer" property matches dcae_layer and whose status is "VALID".
-        "dcaeLayer" is "opendcae-central" for central sites.
         '''
         # Do these as a separate step so things like 404 get reported precisely
         locations = self._get_resource(LOCATIONS_PATH)
@@ -252,5 +281,20 @@ class DMaaPControllerHandle(object):
         # pull out location names for VALID locations with matching dcae_layer
         return  map(lambda l: l["dcaeLocationName"],
                     filter(lambda i : (i['dcaeLayer'] == dcae_layer and i['status'] == 'VALID'),
+                       locations.json()))
+
+    def get_dcae_central_locations(self):
+        '''
+        Get the list of location names known to the DMaaP bus controller
+        whose "dcaeLayer" property contains "central" (ignoring case) and whose status is "VALID".
+        "dcaeLayer" contains "central" for central sites.
+        '''
+        # Do these as a separate step so things like 404 get reported precisely
+        locations = self._get_resource(LOCATIONS_PATH)
+        locations.raise_for_status()
+
+        # pull out location names for VALID central locations
+        return  map(lambda l: l["dcaeLocationName"],
+                    filter(lambda i : ('central' in i['dcaeLayer'].lower() and i['status'] == 'VALID'),
                        locations.json()))
 

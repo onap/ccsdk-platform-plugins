@@ -39,6 +39,8 @@ def create_topic(**kwargs):
         # Make sure there's a topic_name
         if "topic_name" in ctx.node.properties:
             topic_name = ctx.node.properties["topic_name"]
+            if topic_name == '' or topic_name.isspace():
+                topic_name = random_string(12)
         else:
             topic_name = random_string(12)
 
@@ -82,7 +84,7 @@ def create_topic(**kwargs):
 @operation
 def get_existing_topic(**kwargs):
     '''
-    Get data for an existing feed.
+    Get data for an existing topic.
     Expects 'fqtn' as a node property.
     Copies this property to 'fqtn' in runtime properties for consistency
     with a newly-created topic.
@@ -91,13 +93,26 @@ def get_existing_topic(**kwargs):
     don't run into problems when we try to add a publisher or subscriber later.
     '''
     try:
-        fqtn = ctx.node.properties["fqtn"]
         dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        fqtn_input = False
+        if "fqtn" in ctx.node.properties:
+            fqtn = ctx.node.properties["fqtn"]
+            fqtn_input = True
+        elif "topic_name" in ctx.node.properties:
+            topic_name = ctx.node.properties["topic_name"]
+            ctx.logger.info("Attempting to get fqtn for existing topic {0}".format(topic_name))
+            fqtn = dmc.get_topic_fqtn_by_name(topic_name)
+            if fqtn is None:
+                raise ValueError("Not find existing topic with name " + topic_name)
+        else:
+            ctx.logger..error("Not find existing topic with name {0}".format(topic_name))
+            raise ValueError("Either fqtn or topic_name must be defined to get existing topic")
+
         ctx.logger.info("Attempting to get info for existing topic {0}".format(fqtn))
         t = dmc.get_topic_info(fqtn)
         t.raise_for_status()
 
-        ctx.instance.runtime_properties["fqtn"] = ctx.node.properties["fqtn"]
+        ctx.instance.runtime_properties["fqtn"] = fqtn
 
     except Exception as e:
         ctx.logger.error("Error getting existing topic: {er}".format(er=e))

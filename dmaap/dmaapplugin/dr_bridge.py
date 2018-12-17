@@ -22,6 +22,7 @@ from cloudify.exceptions import NonRecoverableError
 from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS
 from dmaaputils import random_string
 from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
+import pkcrypto
 
 # Set up a subscriber to a source feed
 def _set_up_subscriber(dmc, source_feed_id, loc, delivery_url, username, userpw):
@@ -33,7 +34,7 @@ def _set_up_subscriber(dmc, source_feed_id, loc, delivery_url, username, userpw)
 # Set up a publisher to a target feed
 def _set_up_publisher(dmc, target_feed_id, loc):
     username = random_string(8)
-    userpw = random_string(10)
+    userpw = random_string(16)
     add_pub = dmc.add_publisher(target_feed_id, loc, username, userpw)
     add_pub.raise_for_status()
     pub_info = add_pub.json()
@@ -41,7 +42,7 @@ def _set_up_publisher(dmc, target_feed_id, loc):
 
 # Get a central location to use when creating a publisher or subscriber
 def _get_central_location(dmc):
-    locations = dmc.get_dcae_locations('opendcae-central')
+    locations = dmc.get_dcae_central_locations()
     if len(locations) < 1:
         raise Exception('No central location found for setting up DR bridging')
     return locations[0]          # We take the first one.  Typically there will be two central locations
@@ -107,10 +108,10 @@ def create_external_dr_bridge(**kwargs):
     try:
 
         # Make sure target feed has full set of properties
-        if 'url' in ctx.target.node.properties and  'username' in ctx.target.node.properties and 'userpw' in ctx.target.node.properties:
+        if 'url' in ctx.target.node.properties and 'username' in ctx.target.node.properties and 'userpw' in ctx.target.node.properties:
             url = ctx.target.node.properties['url']
             username = ctx.target.node.properties['username']
-            userpw = ctx.target.node.properties['userpw']
+            userpw = pkcrypto.decrypt_obj(ctx.target.node.properties['userpw'])
         else:
             raise Exception ("Target feed missing url, username, and/or user pw")
 
