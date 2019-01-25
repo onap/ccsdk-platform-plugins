@@ -41,7 +41,7 @@ limitations under the License.
     <!-- path of types file itself relative to this file -->
     <typefile.source>helm-type.yaml</typefile.source>
     <!-- path, in repo, to store type file -->
-    <typefile.dest>type_files/helm/3.0.0/helm-type.yaml</typefile.dest>
+    <typefile.dest>type_files/helm/3.0.1/helm-type.yaml</typefile.dest>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.sources>.</sonar.sources>
     <sonar.junit.reportsPath>nosetests.xml</sonar.junit.reportsPath>
