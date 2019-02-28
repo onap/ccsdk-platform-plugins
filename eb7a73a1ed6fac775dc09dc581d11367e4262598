@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review-1: Tony Hansen <tony@att.com>
+Code-Review+2: Dan Timoney <dtimoney@att.com>
+Submitted-by: Dan Timoney <dtimoney@att.com>
+Submitted-at: Thu, 28 Feb 2019 23:51:30 +0000
+Reviewed-on: https://gerrit.onap.org/r/79327
+Project: ccsdk/platform/plugins
+Branch: refs/heads/master
