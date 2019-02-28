@@ -82,7 +82,6 @@ def add_dr_publisher(**kwargs):
         # Set key in Consul
         ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
         cpy = dict(ctx.source.instance.runtime_properties[target_feed])
-        # cpy["password"] = pkcrypto.encrypt_string(cpy["password"])  # can't encrypt until collectors can decrypt
         ch.add_to_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']), target_feed, cpy)
 
     except Exception as e:
@@ -176,7 +175,6 @@ def add_dr_subscriber(**kwargs):
         # Set key in Consul
         ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
         cpy = dict(ctx.source.instance.runtime_properties[target_feed])
-        # cpy["password"] = pkcrypto.encrypt_string(cpy["password"])  # can't encrypt until collectors can decrypt
         ch.add_to_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']), target_feed, cpy)
 
     except Exception as e:

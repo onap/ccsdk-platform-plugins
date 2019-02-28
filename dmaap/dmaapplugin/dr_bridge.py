@@ -22,7 +22,6 @@ from cloudify.exceptions import NonRecoverableError
 from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS
 from dmaaputils import random_string
 from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
-import pkcrypto
 
 # Set up a subscriber to a source feed
 def _set_up_subscriber(dmc, source_feed_id, loc, delivery_url, username, userpw):
@@ -111,7 +110,7 @@ def create_external_dr_bridge(**kwargs):
         if 'url' in ctx.target.node.properties and 'username' in ctx.target.node.properties and 'userpw' in ctx.target.node.properties:
             url = ctx.target.node.properties['url']
             username = ctx.target.node.properties['username']
-            userpw = pkcrypto.decrypt_obj(ctx.target.node.properties['userpw'])
+            userpw = ctx.target.node.properties['userpw']
         else:
             raise Exception ("Target feed missing url, username, and/or user pw")
 

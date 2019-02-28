@@ -105,7 +105,7 @@ def get_existing_topic(**kwargs):
             if fqtn is None:
                 raise ValueError("Not find existing topic with name " + topic_name)
         else:
-            ctx.logger..error("Not find existing topic with name {0}".format(topic_name))
+            ctx.logger.error("Not find existing topic with name {0}".format(topic_name))
             raise ValueError("Either fqtn or topic_name must be defined to get existing topic")
 
         ctx.logger.info("Attempting to get info for existing topic {0}".format(fqtn))

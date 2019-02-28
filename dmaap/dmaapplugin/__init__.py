@@ -20,7 +20,6 @@
 from consulif.consulif import ConsulHandle
 from cloudify.exceptions import NonRecoverableError
 import os
-import pkcrypto
 
 os.environ["REQUESTS_CA_BUNDLE"]="/etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt" # This is to handle https request thru plugin
 
@@ -44,7 +43,7 @@ except Exception as e:
     raise NonRecoverableError("Error setting DMAAP_USER while configuring dmaap plugin: {0}".format(e))
 
 try:
-    DMAAP_PASS = pkcrypto.decrypt_obj(config['dmaap']['password'])
+    DMAAP_PASS = config['dmaap']['password']
 except Exception as e:
     raise NonRecoverableError("Error setting DMAAP_PASS while configuring dmaap plugin: {0}".format(e))
 
