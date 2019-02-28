@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd3adf97_55281688",
+        "filename": "dmaap/dmaap.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2019-02-28T13:58:25Z",
+      "side": 1,
+      "message": "this needs to change to 2017-2019, in all files with a copyright",
+      "revId": "eb7a73a1ed6fac775dc09dc581d11367e4262598",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbf6e4a4_aabb59f6",
+        "filename": "dmaap/dmaapplugin/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2019-02-28T13:58:25Z",
+      "side": 1,
+      "message": "2017-2019",
+      "revId": "eb7a73a1ed6fac775dc09dc581d11367e4262598",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7765b75f_ca53a05c",
+        "filename": "dmaap/dmaapplugin/dr_bridge.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2019-02-28T13:58:25Z",
+      "side": 1,
+      "message": "2017-2019",
+      "revId": "eb7a73a1ed6fac775dc09dc581d11367e4262598",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "724e3769_031e55e8",
+        "filename": "dmaap/dmaapplugin/dr_relationships.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2019-02-28T13:58:25Z",
+      "side": 1,
+      "message": "2017-2019",
+      "revId": "eb7a73a1ed6fac775dc09dc581d11367e4262598",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8f130ff_2e20f715",
+        "filename": "dmaap/dmaapplugin/mr_lifecycle.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2019-02-28T13:58:25Z",
+      "side": 1,
+      "message": "2017-2019",
+      "revId": "eb7a73a1ed6fac775dc09dc581d11367e4262598",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76e551a7_111855e4",
+        "filename": "dmaap/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2019-02-28T13:58:25Z",
+      "side": 1,
+      "message": "2019",
+      "revId": "eb7a73a1ed6fac775dc09dc581d11367e4262598",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
