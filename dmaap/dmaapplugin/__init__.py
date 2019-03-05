@@ -1,7 +1,7 @@
 # ============LICENSE_START====================================================
 # org.onap.ccsdk
 # =============================================================================
-# Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,11 +21,14 @@ from consulif.consulif import ConsulHandle
 from cloudify.exceptions import NonRecoverableError
 import os
 
-os.environ["REQUESTS_CA_BUNDLE"]="/etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt" # This is to handle https request thru plugin
+os.environ["REQUESTS_CA_BUNDLE"]="/opt/onap/certs/cacert.pem" 	# This is to handle https request thru plugin
 
-CONSUL_HOST = "127.0.0.1"                   # Should always be a local consul agent on Cloudify Manager
-DBCL_KEY_NAME = "dmaap_dbcl_info"           # Consul key containing DMaaP data bus credentials
-DBC_SERVICE_NAME= "dmaap_bus_controller"    # Name under which the DMaaP bus controller is registered
+CONSUL_HOST = "consul"                      # Should always be a local consul agent on Cloudify Manager
+DBCL_KEY_NAME = "dmaap-plugin"              # Consul key containing DMaaP data bus credentials
+# In the ONAP Kubernetes environment, bus controller address is always "dmaap-bc", on port 8080 (http) and 8443 (https)
+ONAP_SERVICE_ADDRESS = "dmaap-bc"
+HTTP_PORT = "8080"
+HTTPS_PORT = "8443"
 
 try:
     _ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, None)
@@ -55,8 +58,10 @@ except Exception as e:
 try:
     if 'protocol' in config['dmaap']:
         DMAAP_PROTOCOL = config['dmaap']['protocol']
+        service_port = HTTP_PORT
     else:
         DMAAP_PROTOCOL = 'https'    # Default to https (service discovery should give us this but doesn't
+        service_port = HTTPS_PORT
 except Exception as e:
     raise NonRecoverableError("Error setting DMAAP_PROTOCOL while configuring dmaap plugin: {0}".format(e))
 
@@ -69,11 +74,7 @@ except Exception as e:
     raise NonRecoverableError("Error setting DMAAP_PATH while configuring dmaap plugin: {0}".format(e))
 
 try:
-    service_address, service_port = _ch.get_service(DBC_SERVICE_NAME)
-except Exception as e:
-    raise NonRecoverableError("Error getting service_address and service_port for '{0}' from ConsulHandle when configuring dmaap plugin: {1}".format(DBC_SERVICE_NAME, e))
-
-try:
+    service_address = ONAP_SERVICE_ADDRESS
     DMAAP_API_URL = '{0}://{1}:{2}/{3}'.format(DMAAP_PROTOCOL, service_address, service_port, DMAAP_PATH)
 except Exception as e:
     raise NonRecoverableError("Error setting DMAAP_API_URL while configuring dmaap plugin: {0}".format(e))
