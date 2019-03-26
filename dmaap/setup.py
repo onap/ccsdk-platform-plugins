@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = "cloudifydmaapplugin",
+    name = "dmaap",
     version = "1.3.2",
     packages=find_packages(),
     author = "AT&T",
