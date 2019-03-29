@@ -21,7 +21,7 @@
 import pytest
 
 
-def test_random_string():
+def test_random_string(monkeypatch):
     from dmaapplugin import dmaaputils
     target_length = 10
     assert len(dmaaputils.random_string(target_length)) == target_length

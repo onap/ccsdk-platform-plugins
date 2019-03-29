@@ -45,7 +45,7 @@ _goodosv2 = {
 def test_dmaapc (monkeypatch, mockconsul, mockdmaapbc):
     from dmaapplugin.dmaaputils import random_string
 
-    config = test_consulif.test_get_config_service()
+    config = test_consulif.test_get_config_service(monkeypatch)
     DMAAP_API_URL = config['DMAAP_API_URL']
     DMAAP_USER = config['DMAAP_USER']
     DMAAP_PASS = config['DMAAP_PASS']
