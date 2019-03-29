@@ -26,14 +26,15 @@ import os
 
 
 #When run unit test, please update the consul interface parameters based on local consul configuration. 
-CONSUL_HOST = "127.0.0.1"                   # Should always be a local consul agent on Cloudify Manager
+CONSUL_HOST = "consul"                      # Should always be a local consul agent on Cloudify Manager
+CONSUL_PORT = '8500'
 DBCL_KEY_NAME = "dmaap_dbcl_info"           # Consul key containing DMaaP data bus credentials
 DBC_SERVICE_NAME= "dmaap_bus_controller"    # Name under which the DMaaP bus controller is registered
 
 def test_get_config_service():
   try:
     err_msg = "Error getting ConsulHandle when configuring dmaap plugin: {0}"
-    _ch = ConsulHandle("http://{0}:8510".format(CONSUL_HOST), None, None, None)
+    _ch = ConsulHandle("http://{0}:{1}".format(CONSUL_HOST, CONSUL_PORT), None, None, None)
     assert None != _ch
     
     err_msg = "Error getting config for '{0}' from ConsulHandle when configuring dmaap plugin: ".format(DBCL_KEY_NAME) + "{0}"
@@ -76,7 +77,7 @@ def test_get_config_service():
 
 def test_add_entry():
   try:
-    _ch = ConsulHandle("http://{0}:8510".format(CONSUL_HOST), None, None, None)
+    _ch = ConsulHandle("http://{0}:{1}".format(CONSUL_HOST, CONSUL_PORT), None, None, None)
     assert None != _ch
 
     key = 'DMAAP_TEST'
