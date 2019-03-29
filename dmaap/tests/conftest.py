@@ -43,11 +43,15 @@ def mockconsul(monkeypatch):
     def fake_delete_entry(self, entry_name):
         return True
 
+    def fake_init(self, api_url, user, password, logger):
+        pass
+
     from consulif.consulif import ConsulHandle
     monkeypatch.setattr(ConsulHandle, 'get_config', fake_get_config)
     monkeypatch.setattr(ConsulHandle, 'get_service', fake_get_service)
     monkeypatch.setattr(ConsulHandle, 'add_to_entry', fake_add_to_entry)
     monkeypatch.setattr(ConsulHandle, 'delete_entry', fake_delete_entry)
+    monkeypatch.setattr(ConsulHandle, '__init__', fake_init)
 
 @pytest.fixture()
 def mockdmaapbc(monkeypatch):
