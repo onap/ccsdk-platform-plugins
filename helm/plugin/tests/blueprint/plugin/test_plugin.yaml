@@ -26,24 +26,24 @@ node_types:
   onap.nodes.component:
     derived_from: cloudify.nodes.Root
     properties:
-      tiller-server-ip:
+      tiller_ip:
         description: IP of tiller server
         type: string
-      tiller-server-port:
+      tiller_port:
         default: local
         description: Port of tiller server
         type: string
-      chart-repo-url:
+      chart_repo_url:
         default: local
         description: helm chart repo url
         type: string
-      component-name:
+      component_name:
         description: onap component string
         type: string
-      chart-version:
+      chart_version:
         description: helm chart version
         type: string
-      config-dir:
+      config_dir:
         description: config file dir
         default: '/opt/manager/resources/'
         type: string
@@ -54,18 +54,22 @@ node_types:
         description: String format config file
         type: string
         default: ''
-      config-url:
+      config_set:
+        description: String format config file
+        type: string
+        default: ''
+      config_url:
         description: String format config file url
         type: string
         default: ''
-      config-format:
+      config_format:
         description: String format config file format
         type: string
         default: 'json'
-      runtime-config:
+      runtime_config:
         default: ''
         description: String format json object. To save the runtime config generate from other nodes.
-      tls-enable:
+      tls_enable:
         description: enable helm TSL
         type: boolean
         default: false
@@ -81,10 +85,17 @@ node_types:
         description:  value of key.pem
         type: string
         default: ''
-      stable-repo-url:
+      stable_repo_url:
         description:   URL for stable repository
         type: string
         default: 'https://kubernetes-charts.storage.googleapis.com'
+      repo_user:
+        type: string
+        default: ''
+      repo_user_password:
+        type: string
+        default: ''
+
 
     interfaces:
       cloudify.interfaces.lifecycle:
@@ -101,7 +112,10 @@ workflows:
     parameters:
       node_instance_id:
         description: The id of the node-instance that you want to modify.
-      config_json:
+      config_set:
+        description: The set option string
+        default: ''
+      config:
         description: The changes to the new config json
         default: ''
       config_url:
@@ -110,9 +124,9 @@ workflows:
       config_format:
         description: The config url input format
         default: 'json'
-      chartVersion:
+      chart_version:
         description: chart version
-      chartRepo:
+      chart_repo_url:
         description: chart repo url
   rollback:
     mapping: helm-plugin.plugin.workflows.rollback

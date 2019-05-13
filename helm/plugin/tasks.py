@@ -86,11 +86,11 @@ def configure_admin_conf():
 
 
 def get_current_helm_value(chart_name):
-    tiller_host = str(ctx.node.properties['tiller-server-ip']) + ':' + str(
-        ctx.node.properties['tiller-server-port'])
-    config_dir_root = str(ctx.node.properties['config-dir'])
+    tiller_host = str(ctx.node.properties['tiller_ip']) + ':' + str(
+        ctx.node.properties['tiller_port'])
+    config_dir_root = str(ctx.node.properties['config_dir'])
     config_dir = config_dir_root + str(ctx.deployment.id) + '/'
-    if str_to_bool(ctx.node.properties['tls-enable']):
+    if str_to_bool(ctx.node.properties['tls_enable']):
         getValueCommand = subprocess.Popen(
             ["helm", "get", "values", "-a", chart_name, '--host', tiller_host,
              '--tls', '--tls-ca-cert', config_dir + 'ca.cert.pem',
@@ -108,11 +108,11 @@ def get_current_helm_value(chart_name):
 
 
 def get_helm_history(chart_name):
-    tiller_host = str(ctx.node.properties['tiller-server-ip']) + ':' + str(
-        ctx.node.properties['tiller-server-port'])
-    config_dir_root = str(ctx.node.properties['config-dir'])
+    tiller_host = str(ctx.node.properties['tiller_ip']) + ':' + str(
+        ctx.node.properties['tiller_port'])
+    config_dir_root = str(ctx.node.properties['config_dir'])
     config_dir = config_dir_root + str(ctx.deployment.id) + '/'
-    if str_to_bool(ctx.node.properties['tls-enable']):
+    if str_to_bool(ctx.node.properties['tls_enable']):
         getHistoryCommand = subprocess.Popen(
             ["helm", "history", chart_name, '--host', tiller_host, '--tls',
              '--tls-ca-cert', config_dir + 'ca.cert.pem', '--tls-cert',
@@ -131,20 +131,9 @@ def get_helm_history(chart_name):
     ctx.instance.runtime_properties['helm-history'] = history_start_output
 
 
-def mergedict(dict1, dict2):
-    for key in dict2.keys():
-        if key not in dict1.keys():
-            dict1[key] = dict2[key]
-        else:
-            if type(dict1[key]) == dict and type(dict2[key]) == dict:
-                mergedict(dict1[key], dict2[key])
-            else:
-                dict1[key] = dict2[key]
-
-
 def tls():
-    if str_to_bool(ctx.node.properties['tls-enable']):
-        config_dir_root = str(ctx.node.properties['config-dir'])
+    if str_to_bool(ctx.node.properties['tls_enable']):
+        config_dir_root = str(ctx.node.properties['config_dir'])
         config_dir = config_dir_root + str(ctx.deployment.id) + '/'
         tls_command = ' --tls --tls-ca-cert ' + config_dir + 'ca.cert.pem ' \
                                                              '--tls-cert ' + \
@@ -158,8 +147,8 @@ def tls():
 
 def tiller_host():
     tiller_host = ' --host ' + str(
-        ctx.node.properties['tiller-server-ip']) + ':' + str(
-        ctx.node.properties['tiller-server-port']) + ' '
+        ctx.node.properties['tiller_ip']) + ':' + str(
+        ctx.node.properties['tiller_port']) + ' '
     ctx.logger.debug(tiller_host)
     return tiller_host
 
@@ -174,30 +163,132 @@ def str_to_bool(s):
         raise False
 
 
-@operation
-def config(**kwargs):
-    # create helm value file on K8s master
-    # configPath = ctx.node.properties['config-path']
-    configJson = str(ctx.node.properties['config'])
-    configUrl = str(ctx.node.properties['config-url'])
-    configUrlInputFormat = str(ctx.node.properties['config-format'])
-    runtime_config = str(ctx.node.properties['runtime-config'])  # json
-    componentName = ctx.node.properties['component-name']
-    config_dir_root = str(ctx.node.properties['config-dir'])
-    stable_repo_url = str(ctx.node.properties['stable-repo-url'])
-    ctx.logger.debug("debug " + configJson + runtime_config)
-    # load input config
-    config_dir = config_dir_root + str(ctx.deployment.id)
+def get_config_json(config_json, config_path, config_opt_f, config_file_nm):
+    config_obj = {}
+    config_obj = json.loads(config_json)
+    config_file = config_path + config_file_nm + ".yaml"
+    gen_config_file(config_file, config_obj)
+    config_opt_f = config_opt_f + " -f " + config_file
+    return config_opt_f
+
+
+def pop_config_info(url, config_file, f_format, repo_user, repo_user_passwd):
+    if url.find("@") != -1:
+        head, end = url.rsplit('@', 1)
+        head, auth = head.rsplit('//', 1)
+        url = head + '//' + end
+        username, password = auth.rsplit(':', 1)
+        request = urllib2.Request(url)
+        base64string = base64.encodestring(
+            '%s:%s' % (username, password)).replace('\n', '')
+        request.add_header("Authorization", "Basic %s" % base64string)
+        response = urllib2.urlopen(request)
+    elif repo_user != '' and repo_user_passwd != '':
+        request = urllib2.Request(url)
+        base64string = base64.b64encode('%s:%s' % (repo_user, repo_user_passwd))
+        request.add_header("Authorization", "Basic %s" % base64string)
+        response = urllib2.urlopen(request)
+    else:
+        response = urllib2.urlopen(url)
+
+    config_obj = {}
+    if f_format == 'json':
+        config_obj = json.load(response)
+    elif f_format == 'yaml':
+        config_obj = yaml.load(response)
+    else:
+        raise NonRecoverableError("Unable to get config input format.")
+
+    gen_config_file(config_file, config_obj)
+
+
+def gen_config_file(config_file, config_obj):
     try:
-        os.makedirs(config_dir)
+        with open(config_file, 'w') as outfile:
+            yaml.safe_dump(config_obj, outfile, default_flow_style=False)
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
+
+
+def gen_config_str(config_file, config_opt_f):
+    try:
+        with open(config_file, 'w') as outfile:
+            yaml.safe_dump(config_opt_f, outfile, default_flow_style=False)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+
+
+def get_rem_config(config_url, config_input_format, config_path, config_opt_f, config_file_nm, repo_user, repo_user_passwd):
+    ctx.logger.debug("config_url=" + config_url)
+    f_cnt = 0
+    # urls = config_url.split()
+    urls = [x.strip() for x in config_url.split(',')]
+    if len(urls) > 1:
+        for url in urls:
+            f_cnt = f_cnt + 1
+            config_file = config_path + config_file_nm + str(f_cnt) + ".yaml"
+            pop_config_info(url, config_file, config_input_format, repo_user, repo_user_passwd)
+            config_opt_f = config_opt_f + " -f " + config_file
+    else:
+        config_file = config_path + config_file_nm + ".yaml"
+        pop_config_info(config_url, config_file, config_input_format, repo_user, repo_user_passwd)
+        config_opt_f = config_opt_f + " -f " + config_file
+
+    return config_opt_f
+
+
+def get_config_str(config_file):
+    if os.path.isfile(config_file):
+        with open(config_file, 'r') as config_f:
+            return config_f.read().replace('\n', '')
+    return ''
+
+
+def opt(config_file):
+    opt_str = get_config_str(config_file)
+    if opt_str != '':
+        return opt_str.replace("'", "")
+    return opt_str
+
+def repo(repo_url, repo_user, repo_user_passwd):
+    if repo_user != '' and repo_user_passwd != '' and repo_url.find("@") == -1:
+        proto, ip = repo_url.rsplit('//', 1)
+        return proto + '//' + repo_user + ':' + repo_user_passwd + '@' + ip
+    else:
+        return repo_url
+
+
+@operation
+def config(**kwargs):
+    # create helm value file on K8s master
+    configJson = str(ctx.node.properties['config'])
+    configUrl = str(ctx.node.properties['config_url'])
+    configUrlInputFormat = str(ctx.node.properties['config_format'])
+    runtime_config = str(ctx.node.properties['runtime_config'])  # json
+    componentName = ctx.node.properties['component_name']
+    config_dir_root = str(ctx.node.properties['config_dir'])
+    stable_repo_url = str(ctx.node.properties['stable_repo_url'])
+    config_opt_set = str(ctx.node.properties['config_set'])
+    repo_user = str(ctx.node.properties['repo_user'])
+    repo_user_passwd = str(ctx.node.properties['repo_user_password'])
+    ctx.logger.debug("debug " + configJson + runtime_config)
+    # load input config
+    config_dir = config_dir_root + str(ctx.deployment.id)
+
+    if not os.path.exists(config_dir):
+        try:
+            os.makedirs(config_dir)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
+
     ctx.logger.debug('tls-enable type ' + str(
-        type(str_to_bool(ctx.node.properties['tls-enable']))))
+        type(str_to_bool(ctx.node.properties['tls_enable']))))
 
     # create TLS cert files
-    if str_to_bool(ctx.node.properties['tls-enable']):
+    if str_to_bool(ctx.node.properties['tls_enable']):
         ctx.logger.debug('tls enable')
         ca_value = ctx.node.properties['ca']
         cert_value = ctx.node.properties['cert']
@@ -214,51 +305,45 @@ def config(**kwargs):
     else:
         ctx.logger.debug('tls disable')
 
-    # create helm value.yaml file
-    configPath = config_dir_root + str(
-        ctx.deployment.id) + '/' + componentName + '.yaml'
-    ctx.logger.debug(configPath)
+    config_path = config_dir + '/' + componentName + '/'
+    ctx.logger.debug(config_path)
 
-    configObj = {}
+    if os.path.exists(config_path):
+        shutil.rmtree(config_path)
+
+    try:
+        os.makedirs(config_path)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+
+    config_opt_f = ""
     if configJson == '' and configUrl == '':
         ctx.logger.debug("Will use default HELM value")
     elif configJson == '' and configUrl != '':
-        if configUrl.find("@") != -1:
-            head, end = configUrl.rsplit('@', 1)
-            head, auth = head.rsplit('//', 1)
-            configUrl = head + '//' + end
-            username, password = auth.rsplit(':', 1)
-            request = urllib2.Request(configUrl)
-            base64string = base64.encodestring(
-                '%s:%s' % (username, password)).replace('\n', '')
-            request.add_header("Authorization", "Basic %s" % base64string)
-            response = urllib2.urlopen(request)
-        else:
-            response = urllib2.urlopen(configUrl)
-        if configUrlInputFormat == 'json':
-            configObj = json.load(response)
-        elif configUrlInputFormat == 'yaml':
-            configObj = yaml.load(response)
-        else:
-            raise NonRecoverableError("Unable to get config input format.")
+        config_opt_f = get_rem_config(configUrl, configUrlInputFormat, config_path, config_opt_f, "rc", repo_user, repo_user_passwd)
     elif configJson != '' and configUrl == '':
-        configObj = json.loads(configJson)
+        config_opt_f = get_config_json(configJson, config_path, config_opt_f, "lc")
     else:
-        raise NonRecoverableError("Unable to get Json config input")
+        raise NonRecoverableError("Unable to get config input")
 
-    # load runtime config
     ctx.logger.debug("debug check runtime config")
     if runtime_config == '':
         ctx.logger.debug("there is no runtime config value")
     else:
-        runtime_config_obj = json.loads(runtime_config)
-        mergedict(configObj, runtime_config_obj)
+        config_opt_f = get_config_json(runtime_config, config_path, config_opt_f, "rt")
 
-    with open(configPath, 'w') as outfile:
-        yaml.safe_dump(configObj, outfile, default_flow_style=False)
+    if configUrl != '' or configJson != '' or runtime_config != '':
+        config_file = config_path + ".config_file"
+        gen_config_str(config_file, config_opt_f)
+
+    if config_opt_set != '':
+        config_file = config_path + ".config_set"
+        config_opt_set = " --set " + config_opt_set
+        gen_config_str(config_file, config_opt_set)
 
     output = execute_command(
-        'helm init --client-only --stable-repo-url ' + stable_repo_url)
+        'helm init --client-only --stable-repo-url ' + repo(stable_repo_url, repo_user, repo_user_passwd))
     if output == False:
         raise NonRecoverableError("helm init failed")
 
@@ -267,27 +352,23 @@ def config(**kwargs):
 def start(**kwargs):
     # install the ONAP Helm chart
     # get properties from node
-    chartRepo = ctx.node.properties['chart-repo-url']
-    componentName = ctx.node.properties['component-name']
-    chartVersion = ctx.node.properties['chart-version']
-    config_dir_root = str(ctx.node.properties['config-dir'])
-    configPath = config_dir_root + str(
-        ctx.deployment.id) + '/' + componentName + '.yaml'
+    repo_user = str(ctx.node.properties['repo_user'])
+    repo_user_passwd = str(ctx.node.properties['repo_user_password'])
+    chartRepo = ctx.node.properties['chart_repo_url']
+    componentName = ctx.node.properties['component_name']
+    chartVersion = str(ctx.node.properties['chart_version'])
+    config_dir_root = str(ctx.node.properties['config_dir'])
     namespace = ctx.node.properties['namespace']
-    configJson = str(ctx.node.properties['config'])
-    configUrl = str(ctx.node.properties['config-url'])
-    runtimeconfigJson = str(ctx.node.properties['runtime-config'])
 
-    chart = chartRepo + "/" + componentName + "-" + chartVersion + ".tgz"
+    config_path = config_dir_root + str(
+        ctx.deployment.id) + '/' + componentName + '/'
+    chart = chartRepo + "/" + componentName + "-" + str(chartVersion) + ".tgz"
     chartName = namespace + "-" + componentName
-
-    if configJson == '' and runtimeconfigJson == '' and configUrl == '':
-        installCommand = 'helm install ' + chart + ' --name ' + chartName + \
-                         ' --namespace ' + namespace + tiller_host() + tls()
-    else:
-        installCommand = 'helm install ' + chart + ' --name ' + chartName + \
-                         ' --namespace ' + namespace + ' -f ' + configPath + \
-                         tiller_host() + tls()
+    config_file = config_path + ".config_file"
+    config_set = config_path + ".config_set"
+    installCommand = 'helm install ' + repo(chart, repo_user, repo_user_passwd) + ' --name ' + chartName + \
+                     ' --namespace ' + namespace + opt(config_file) + \
+                     opt(config_set) + tiller_host() + tls()
 
     output = execute_command(installCommand)
     if output == False:
@@ -305,44 +386,66 @@ def stop(**kwargs):
     # configure_admin_conf()
     # get properties from node
     namespace = ctx.node.properties['namespace']
-    component = ctx.node.properties['component-name']
+    component = ctx.node.properties['component_name']
     chartName = namespace + "-" + component
-    config_dir_root = str(ctx.node.properties['config-dir'])
+    config_dir_root = str(ctx.node.properties['config_dir'])
     # Delete helm chart
     command = 'helm delete --purge ' + chartName + tiller_host() + tls()
     output = execute_command(command)
     if output == False:
         raise NonRecoverableError("helm delete failed")
-    config_file = config_dir_root + str(
-        ctx.deployment.id) + '/' + component + '.yaml'
-    os.remove(config_file)
+    config_path = config_dir_root + str(
+        ctx.deployment.id) + '/' + component
+
+    if os.path.exists(config_path):
+        shutil.rmtree(config_path)
 
 
 @operation
 def upgrade(**kwargs):
-    # upgrade the helm chart
-    componentName = ctx.node.properties['component-name']
-    config_dir_root = str(ctx.node.properties['config-dir'])
-    configPath = config_dir_root + str(
-        ctx.deployment.id) + '/' + componentName + '.yaml'
-    componentName = ctx.node.properties['component-name']
+    config_dir_root = str(ctx.node.properties['config_dir'])
+    componentName = ctx.node.properties['component_name']
     namespace = ctx.node.properties['namespace']
+    repo_user = kwargs['repo_user']
+    repo_user_passwd = kwargs['repo_user_passwd']
     configJson = kwargs['config']
     chartRepo = kwargs['chart_repo']
     chartVersion = kwargs['chart_version']
+    config_set = kwargs['config_set']
+    config_json = kwargs['config_json']
+    config_url = kwargs['config_url']
+    config_format = kwargs['config_format']
+    config_path = config_dir_root + str(
+        ctx.deployment.id) + '/' + componentName + '/'
 
-    ctx.logger.debug('debug ' + str(configJson))
+    # ctx.logger.debug('debug ' + str(configJson))
     chartName = namespace + "-" + componentName
     chart = chartRepo + "/" + componentName + "-" + chartVersion + ".tgz"
-    if str(configJson) == '':
-        upgradeCommand = 'helm upgrade ' + chartName + ' ' + chart + \
-                         tiller_host() + tls()
+
+    config_opt_f = ""
+    if config_json == '' and config_url == '':
+        ctx.logger.debug("Will use default HELM values")
+    elif config_json == '' and config_url != '':
+        config_opt_f = get_rem_config(config_url, config_format, config_path, config_opt_f, "ru", repo_user, repo_user_passwd)
+    elif config_json != '' and config_url == '':
+        config_opt_f = get_config_json(config_json, config_path, config_opt_f, "lu")
     else:
-        with open(configPath, 'w') as outfile:
-            yaml.safe_dump(configJson, outfile, default_flow_style=False)
-        # configure_admin_conf()
-        upgradeCommand = 'helm upgrade ' + chartName + ' ' + chart + ' -f ' + \
-                         configPath + tiller_host() + tls()
+        raise NonRecoverableError("Unable to get upgrade config input")
+
+    config_upd = ""
+    if config_url != '' or config_json != '':
+        config_upd = config_path + ".config_upd"
+        gen_config_str(config_upd, config_opt_f)
+
+    config_upd_set = ""
+    if config_set != '':
+        config_upd_set = config_path + ".config_upd_set"
+        config_opt_set = " --set " + config_set
+        gen_config_str(config_upd_set, config_opt_set)
+
+    upgradeCommand = 'helm upgrade ' + chartName + ' ' + repo(chart, repo_user, repo_user_passwd) + opt(config_upd) + \
+                         opt(config_upd_set) + tiller_host() + tls()
+
     output = execute_command(upgradeCommand)
     if output == False:
         return ctx.operation.retry(
@@ -355,7 +458,7 @@ def upgrade(**kwargs):
 @operation
 def rollback(**kwargs):
     # rollback to some revision
-    componentName = ctx.node.properties['component-name']
+    componentName = ctx.node.properties['component_name']
     namespace = ctx.node.properties['namespace']
     revision = kwargs['revision']
     # configure_admin_conf()
@@ -371,7 +474,7 @@ def rollback(**kwargs):
 
 @operation
 def status(**kwargs):
-    componentName = ctx.node.properties['component-name']
+    componentName = ctx.node.properties['component_name']
     namespace = ctx.node.properties['namespace']
 
     chartName = namespace + "-" + componentName

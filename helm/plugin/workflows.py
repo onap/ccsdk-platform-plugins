@@ -25,8 +25,8 @@ import base64
 
 
 @workflow
-def upgrade(node_instance_id, config_json, config_url, config_format,
-            chartVersion, chartRepo, **kwargs):
+def upgrade(node_instance_id, config_set, config, config_url, config_format,
+            chart_version, chart_repo_url, repo_user, repo_user_password, **kwargs):
     node_instance = ctx.get_node_instance(node_instance_id)
 
     if not node_instance_id:
@@ -35,35 +35,15 @@ def upgrade(node_instance_id, config_json, config_url, config_format,
                 node_instance_id))
 
     kwargs = {}
-    if config_json == '' and config_url == '':
-        kwargs['config'] = config_json
-    elif config_json == '' and config_url != '':
-        if config_url.find("@") != -1:
-            head, end = config_url.rsplit('@', 1)
-            head, auth = head.rsplit('//', 1)
-            config_url = head + '//' + end
-            username, password = auth.rsplit(':', 1)
-            request = urllib2.Request(config_url)
-            base64string = base64.encodestring(
-                '%s:%s' % (username, password)).replace('\n', '')
-            request.add_header("Authorization", "Basic %s" % base64string)
-            response = urllib2.urlopen(request)
-        else:
-            response = urllib2.urlopen(config_url)
-        if config_format == 'json':
-            kwargs['config'] = json.load(response)
-        elif config_format == 'yaml':
-            kwargs['config'] = yaml.load(response)
-        else:
-            raise NonRecoverableError("Unable to get config input format")
-    elif config_json != '' and config_url == '':
-        kwargs['config'] = config_json
-
-    else:
-        raise NonRecoverableError("Unable to get Json config input")
-
-    kwargs['chart_version'] = str(chartVersion)
-    kwargs['chart_repo'] = str(chartRepo)
+    kwargs['config'] = ''
+    kwargs['chart_version'] = str(chart_version)
+    kwargs['chart_repo'] = str(chart_repo_url)
+    kwargs['config_set'] = str(config_set)
+    kwargs['config_json'] = str(config)
+    kwargs['config_url'] = str(config_url)
+    kwargs['config_format'] = str(config_format)
+    kwargs['repo_user'] = str(repo_user)
+    kwargs['repo_user_passwd'] = str(repo_user_password)
     operation_args = {'operation': 'upgrade', }
     operation_args['kwargs'] = kwargs
     node_instance.execute_operation(**operation_args)

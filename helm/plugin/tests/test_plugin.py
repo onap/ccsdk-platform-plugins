@@ -125,11 +125,14 @@ class TestPlugin(unittest.TestCase):
         config_format = 'json'
         chartVersion = '2.0.0'
         chartRepo = 'repo'
+        repo_user = ''
+        repo_user_passwd = ''
         try:
             cfy_local.execute('upgrade', task_retries=0,
-                                     parameters={'node_instance_id': node_instance_id, 'config_json': config_json,
-                                                        'config_url': config_url, 'config_format': config_format,
-                                                        'chartVersion': chartVersion, 'chartRepo': chartRepo})
+                                     parameters={'node_instance_id': node_instance_id, 'config': config_json,
+                                                    'config_url': config_url, 'config_format': config_format,
+                                                    'chart_version': chartVersion, 'chart_repo_url': chartRepo,
+                                                    'repo_user': repo_user, 'repo_user_password': repo_user_passwd})
             self.fail('Expected exception due to operation not exist')
         except Exception as e:
             self.assertTrue('operation not available')
@@ -142,11 +145,11 @@ class TestPlugin(unittest.TestCase):
         :rollback operation test:
         """
         props = {
-            'component-name': 'test_node',
+            'component_name': 'test_node',
             'namespace': 'onap',
-            'tiller-server-port': '8888',
-            'tiller-server-ip': '1.1.1.1',
-            'tls-enable': 'false'
+            'tiller_port': '8888',
+            'tiller_ip': '1.1.1.1',
+            'tls_enable': 'false'
         }
         args = {'revision': '1'}
         mock_ctx = MockCloudifyContext(node_id='test_node_id', node_name='test_node_name',
@@ -167,20 +170,23 @@ class TestPlugin(unittest.TestCase):
         :upgrade operation test:
         """
         props = {
-            'component-name': 'test_node',
+            'component_name': 'test_node',
             'namespace': 'onap',
-            'tiller-server-port': '8888',
-            'tiller-server-ip': '1.1.1.1',
-            'tls-enable': 'false',
-            'config-dir': '/tmp'
+            'tiller_port': '8888',
+            'tiller_ip': '1.1.1.1',
+            'tls_enable': 'false',
+            'config_dir': '/tmp'
         }
-        args = {'revision': '1', 'config': '', 'chart_repo': 'repo', 'chart_version': '2'}
+        args = {'revision': '1', 'config': '', 'chart_repo': 'repo', 'chart_version': '2',
+                     'config_set': 'config_set', 'config_json': '', 'config_url': '',
+                     'config_format': 'format', 'repo_user': '', 'repo_user_passwd': ''}
         mock_ctx = MockCloudifyContext(node_id='test_node_id', node_name='test_node_name',
                                          properties=props)
         try:
             current_ctx.set(mock_ctx)
             with mock.patch('plugin.tasks.get_current_helm_value'):
                 with mock.patch('plugin.tasks.get_helm_history'):
-                    plugin.tasks.upgrade(**args)
+                    with mock.patch('plugin.tasks.gen_config_str'):
+                        plugin.tasks.upgrade(**args)
         finally:
             current_ctx.clear()

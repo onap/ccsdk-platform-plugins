@@ -19,31 +19,31 @@ plugins:
   helm-plugin:
     executor: central_deployment_agent
     package_name: helm
-    package_version: 4.0.0
+    package_version: 4.0.1
 
 node_types:
 
   onap.nodes.component:
     derived_from: cloudify.nodes.Root
     properties:
-      tiller-server-ip:
+      tiller_ip:
         description: IP of tiller server
         type: string
-      tiller-server-port:
+      tiller_port:
         default: local
         description: Port of tiller server
         type: string
-      chart-repo-url:
+      chart_repo_url:
         default: local
         description: helm chart repo url
         type: string
-      component-name:
+      component_name:
         description: onap component string
         type: string
-      chart-version:
+      chart_version:
         description: helm chart version
         type: string
-      config-dir:
+      config_dir:
         description: config file dir
         default: '/opt/manager/resources/'
         type: string
@@ -51,21 +51,24 @@ node_types:
         description: k8s namespace
         default: onap
       config:
-        description: String format config file
+        description: json object string
         type: string
         default: ''
-      config-url:
-        description: String format config file url
+      config_url:
+        description: config file url, supports multiple urls seperated by commas 
         type: string
         default: ''
-      config-format:
-        description: String format config file format
+      config_format:
+        description: config file format - json or yaml
         type: string
-        default: 'json'
-      runtime-config:
+        default: 'yaml'
+      runtime_config:
         default: ''
-        description: String format json object. To save the runtime config generate from other nodes.
-      tls-enable:
+        description: json object string, runtime config generate from other nodes.
+      config_set:
+        default: ''
+        description: json object string for supporting helm --set option.
+      tls_enable:
         description: enable helm TSL
         type: boolean
         default: false
@@ -81,23 +84,18 @@ node_types:
         description:  value of key.pem
         type: string
         default: ''
-      stable-repo-url:
+      stable_repo_url:
         description:   URL for stable repository
         type: string
         default: 'https://kubernetes-charts.storage.googleapis.com'
-
-      # This part should handel by Blueprint not plugin
-      # the default docker values points to ONAP nexus3 docker repo.
-      # If need point to other private docker repo you can overrite it in blueprint node templates .
-#      docker-server:
-#        description: Private Docker Registry FQDN.
-#        default: nexus3.onap.org:10001
-#      docker-username:
-#        description: Docker username.
-#        default: docker
-#      docker-password:
-#        description: Docker password.
-#        default: docker
+      repo_user:
+        description:  chart repo user name  
+        type: string
+        default: ''
+      repo_user_password:
+        description:  chart repo user password 
+        type: string
+        default: ''
 
     interfaces:
       cloudify.interfaces.lifecycle:
@@ -115,19 +113,28 @@ workflows:
     parameters:
       node_instance_id:
         description: The id of the node-instance that you want to modify.
-      config_json:
-        description: The changes to the new config json
+      config_set:
+        description: set option string 
+        default: ''
+      config:
+        description: json object string
         default: ''
       config_url:
-        description: The config input url
+        description: config input url, supports multiple urls seperated by commas 
         default: ''
       config_format:
-        description: The config url input format
-        default: 'json'
-      chartVersion:
+        description: config input file format
+        default: 'yaml'
+      chart_version:
         description: chart version
-      chartRepo:
+      chart_repo_url:
         description: chart repo url
+      repo_user:
+        description: chart repo user name
+        default: ''
+      repo_user_password:
+        description: chart repo user password 
+        default: ''
   rollback:
     mapping: helm-plugin.plugin.workflows.rollback
     parameters:

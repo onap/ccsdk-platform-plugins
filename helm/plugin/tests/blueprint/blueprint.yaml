@@ -30,6 +30,8 @@ inputs:
         default: ''
     config-url:
         default: ''
+    config-set:
+        default: ''
     config-format:
         default: 'json'
     tls-enable:
@@ -38,6 +40,12 @@ inputs:
     config-dir:
         type: string
         default: './'
+    repo-user:
+        type: string
+        default: ''
+    repo-user-password:
+        type: string
+        default: ''
     stable-repo-url:
         type: string
         default: 'http://0.0.0.0/stable'
@@ -49,21 +57,24 @@ node_templates:
         # using base cloudify type
         type: onap.nodes.component
         properties:
-            tiller-server-ip: { get_input: tiller-server-ip }
-            tiller-server-port: { get_input: tiller-server-port }
-            component-name: test_node
-            chart-repo-url: { get_input: chart-repo-url }
-            chart-version: { get_input: chart-version }
+            tiller_ip: { get_input: tiller-server-ip }
+            tiller_port: { get_input: tiller-server-port }
+            component_name: test_node
+            chart_repo_url: { get_input: chart-repo-url }
+            chart_version: { get_input: chart-version }
             namespace: { get_input: namespace }
             config: { get_input: jsonConfig}
-            config-url: { get_input: config-url}
-            config-format: { get_input: config-format}
-            tls-enable: { get_input: tls-enable}
+            config_set: { get_input: config-set}
+            config_url: { get_input: config-url}
+            repo_user: { get_input: repo-user}
+            repo_user_password: { get_input: repo-user-password}
+            config_format: { get_input: config-format}
+            tls_enable: { get_input: tls-enable}
             ca: { get_secret: ca_value}
             cert: { get_secret: cert_value}
             key: { get_secret: key_value}
-            config-dir: { get_input: config-dir}
-            stable-repo-url: { get_input: stable-repo-url}
+            config_dir: { get_input: config-dir}
+            stable_repo_url: { get_input: stable-repo-url}
 
 outputs:
     # example output the could be used to simplify assertions by test
