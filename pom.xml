@@ -9,7 +9,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+         http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,29 +19,39 @@ limitations under the License.
 ============LICENSE_END=========================================================
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.onap.oparent</groupId>
-    <artifactId>oparent</artifactId>
-    <version>1.2.3</version>
-  </parent>
-  <groupId>org.onap.ccsdk.platform</groupId>
-  <artifactId>plugins</artifactId>
-  <name>ccsdk-platform-plugins</name>
-  <version>1.0.1-SNAPSHOT</version>
-  <url>http://maven.apache.org</url>
-  <packaging>pom</packaging>
-  <modules>
-     <module>sshkeyshare</module>
-     <module>pgaas</module>
-     <module>dnsdesig</module>
-     <module>helm</module>
-     <module>dmaap</module>
-  </modules>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <sonar.host.url>http://localhost:9000</sonar.host.url>
-    <sonar.exclusions>**/*.py</sonar.exclusions>
-  </properties>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.onap.oparent</groupId>
+        <artifactId>oparent</artifactId>
+        <version>2.0.0</version>
+    </parent>
+    <groupId>org.onap.ccsdk.platform</groupId>
+    <artifactId>plugins</artifactId>
+    <name>ccsdk-platform-plugins</name>
+    <version>1.0.1-SNAPSHOT</version>
+    <url>http://maven.apache.org</url>
+    <packaging>pom</packaging>
+    <modules>
+         <module>sshkeyshare</module>
+         <module>pgaas</module>
+         <module>dnsdesig</module>
+         <module>helm</module>
+         <module>dmaap</module>
+    </modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.exclusions>**/*.py</sonar.exclusions>
+    </properties>
+    <distributionManagement>
+        <repository>
+            <id>ecomp-releases</id>
+            <url>https://nexus.onap.org/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>ecomp-snapshots</id>
+            <url>https://nexus.onap.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
