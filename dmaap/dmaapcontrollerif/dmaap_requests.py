@@ -165,7 +165,7 @@ class DMaaPControllerHandle(object):
 
 
     # Data Router SUbscrihers
-    def add_subscriber(self, feed_id, location, delivery_url, username, password, status=None):
+    def add_subscriber(self, feed_id, location, delivery_url, username, password, decompress, privileged, status=None):
         '''
         Add a publisher to feed feed_id at location location with user, pass, and status
         '''
@@ -174,7 +174,9 @@ class DMaaPControllerHandle(object):
             'dcaeLocationName' : location,
             'deliveryURL' : delivery_url,
             'username' : username,
-            'userpwd' : password
+            'userpwd' : password,
+            'decompress': decompress,
+            'privilegedSubscriber': privileged
         }
 
         if status:
