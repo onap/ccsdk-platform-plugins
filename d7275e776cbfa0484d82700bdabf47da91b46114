@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6442760_d78c92ff",
+        "filename": "dmaap/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T19:19:41Z",
+      "side": 1,
+      "message": "This I suppose was meant to override oparent 1.x; could be removed with switch to oparent2 now",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 17
+      },
+      "revId": "d7275e776cbfa0484d82700bdabf47da91b46114",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bf0227c_45f774cb",
+        "filename": "dnsdesig/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T19:19:41Z",
+      "side": 1,
+      "message": "could be removed",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 17
+      },
+      "revId": "d7275e776cbfa0484d82700bdabf47da91b46114",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fd527b8d_12184ffa",
+        "filename": "helm/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T19:19:41Z",
+      "side": 1,
+      "message": "could be removed",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 17
+      },
+      "revId": "d7275e776cbfa0484d82700bdabf47da91b46114",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e114666_1e2cddc2",
+        "filename": "helm/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T19:19:41Z",
+      "side": 1,
+      "message": "duplicate",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 17
+      },
+      "revId": "d7275e776cbfa0484d82700bdabf47da91b46114",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "162811c1_04d4930a",
+        "filename": "pgaas/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T19:19:41Z",
+      "side": 1,
+      "message": "could be removed",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 17
+      },
+      "revId": "d7275e776cbfa0484d82700bdabf47da91b46114",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd4d45d5_185b65a9",
+        "filename": "sshkeyshare/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T19:19:41Z",
+      "side": 1,
+      "message": "could be removed",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 17
+      },
+      "revId": "d7275e776cbfa0484d82700bdabf47da91b46114",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
