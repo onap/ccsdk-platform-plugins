@@ -8,3 +8,7 @@
 **/target
 helm/test_config
 helm/nosetests.xml
+**/.tox
+**/*.wgn
+**/*.egg-info
+**/.testenv
