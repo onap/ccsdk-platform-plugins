@@ -1,3 +1,18 @@
 # IntelliJ
 .idea/*
+<<<<<<< HEAD   (906f5e Enhance Helm Plugin)
 *.iml
+=======
+*.iml
+**/*.pyc
+**/xunit-results.xml
+**/.coverage
+**/coverage.xml
+**/target
+helm/test_config
+helm/nosetests.xml
+**/.tox
+**/*.wgn
+**/*.egg-info
+**/.testenv
+>>>>>>> CHANGE (d7275e Disable deploy plugin)
