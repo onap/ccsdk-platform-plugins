@@ -25,7 +25,7 @@ plugins:
   dmaapplugin:
     executor: 'central_deployment_agent'
     package_name: dmaap
-    package_version: 1.3.3
+    package_version: 1.3.4
 
 
 node_types:
@@ -156,7 +156,7 @@ relationships:
     derived_from: cloudify.relationships.connected_to
     target_interfaces:
       cloudify.interfaces.relationship_lifecycle:
-        establish: dmaapplugin.dmaapplugin.dr_relationships.add_dr_subscriber
+        preconfigure: dmaapplugin.dmaapplugin.dr_relationships.add_dr_subscriber
         unlink: dmaapplugin.dmaapplugin.dr_relationships.delete_dr_subscriber
 
   ccsdk.relationships.publish_events:

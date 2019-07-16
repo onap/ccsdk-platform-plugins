@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "dmaap",
-    version = "1.3.3",
+    version = "1.3.4",
     packages=find_packages(),
     author = "AT&T",
     description = ("Cloudify plugin for creating DMaaP feeds and topics, and setting up publishers and subscribers."),
