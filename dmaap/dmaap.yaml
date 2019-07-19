@@ -25,7 +25,7 @@ plugins:
   dmaapplugin:
     executor: 'central_deployment_agent'
     package_name: dmaap
-    package_version: 1.3.4
+    package_version: 1.3.5
 
 
 node_types:
@@ -46,6 +46,9 @@ node_types:
         required: false
       aspr_classification:
         type: string
+        required: false
+      useExisting:
+        type: boolean
         required: false
 
     interfaces:
@@ -114,6 +117,9 @@ node_types:
         required: false
       global_mr_url:
         type: string
+        required: false
+      useExisting:
+        type: boolean
         required: false
 
     interfaces:

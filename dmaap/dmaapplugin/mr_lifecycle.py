@@ -28,12 +28,14 @@ from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
 def create_topic(**kwargs):
     '''
     Creates a message router topic.
-    Allows 'topic_name', 'topic_description', 'txenable', 'replication_case',
-    and 'global_mr_url'  as optional node properties.  If 'topic_name' is not set,
+    Allows 'topic_name', 'topic_description', 'txenable', 'replication_case', 'global_mr_url',
+    and 'useExisting' as optional node properties.  If 'topic_name' is not set,
     generates a random one.
     Sets 'fqtn' in the instance runtime_properties.
     Note that 'txenable' is a Message Router flag indicating whether transactions
     are enabled on the topic.
+    Note that 'useExisting' is a flag indicating whether DBCL will use existing topic if
+    the topic already exists.
     '''
     try:
         # Make sure there's a topic_name
@@ -66,11 +68,15 @@ def create_topic(**kwargs):
         else:
             global_mr_url = None
 
+        if "useExisting" in ctx.node.properties:
+            useExisting = ctx.node.properties["useExisting"]
+        else:
+            useExisting = False
 
         # Make the request to the controller
         dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
         ctx.logger.info("Attempting to create topic name {0}".format(topic_name))
-        t = dmc.create_topic(topic_name, topic_description, txenable, DMAAP_OWNER, replication_case, global_mr_url)
+        t = dmc.create_topic(topic_name, topic_description, txenable, DMAAP_OWNER, replication_case, global_mr_url, useExisting)
         t.raise_for_status()
 
         # Capture important properties from the result

@@ -12,3 +12,4 @@ helm/nosetests.xml
 **/*.wgn
 **/*.egg-info
 **/.testenv
+.vscode/*

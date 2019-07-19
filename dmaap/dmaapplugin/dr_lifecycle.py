@@ -31,9 +31,10 @@ def create_feed(**kwargs):
     Create a new data router feed
         Expects "feed_name" to be set in node properties
         If 'feed_name' is not set or is empty, generates a random one.
-        Allows "feed_version", "feed_description", and "aspr_classification" as optional properties
+        Allows "feed_version", "feed_description", "aspr_classification" and "useExisting" as optional properties
         (Sets default values if not provided )
         Sets instance runtime properties:
+        Note that 'useExisting' is a flag indicating whether DBCL will use existing feed if the feed already exists.
             - "feed_id"
             - "publish_url"
             - "log_url"
@@ -58,11 +59,15 @@ def create_feed(**kwargs):
             aspr_classification = ctx.node.properties["aspr_classification"]
         else:
             aspr_classification = "unclassified"
+        if "useExisting" in ctx.node.properties.keys():
+            useExisting = ctx.node.properties["useExisting"]
+        else:
+            useExisting = False
 
         # Make the request to the controller
         dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
         ctx.logger.info("Attempting to create feed name {0}".format(feed_name))
-        f = dmc.create_feed(feed_name, feed_version, feed_description, aspr_classification, DMAAP_OWNER)
+        f = dmc.create_feed(feed_name, feed_version, feed_description, aspr_classification, DMAAP_OWNER, useExisting)
         f.raise_for_status()
 
         # Capture important properties from the result
@@ -102,11 +107,11 @@ def get_existing_feed(**kwargs):
             if f is None:
                 ctx.logger.error("Not find existing feed with feed name {0}".format(feed_name))
                 raise ValueError("Not find existing feed with feed name " + feed_name)
-        else: 
+        else:
             raise ValueError("Either feed_id or feed_name must be defined to get existing feed")
 
         f.raise_for_status()
-        
+
         # Capture important properties from the result
         feed = f.json()
         feed_id = feed["feedId"]
@@ -118,17 +123,17 @@ def get_existing_feed(**kwargs):
         else:
             ctx.logger.info("Found existing feed with feed name {0}".format(ctx.node.properties["feed_name"]))
 
-    except ValueError as e:                            
-        ctx.logger.error("{er}".format(er=e)) 
+    except ValueError as e:
+        ctx.logger.error("{er}".format(er=e))
         raise NonRecoverableError(e)
-    except Exception as e:                            
+    except Exception as e:
         if feed_id_input:
-            ctx.logger.error("Error getting existing feed id {id}: {er}".format(id=ctx.node.properties["feed_id"],er=e)) 
+            ctx.logger.error("Error getting existing feed id {id}: {er}".format(id=ctx.node.properties["feed_id"],er=e))
         else:
-            ctx.logger.error("Error getting existing feed name {name}: {er}".format(name=ctx.node.properties["feed_name"],er=e)) 
+            ctx.logger.error("Error getting existing feed name {name}: {er}".format(name=ctx.node.properties["feed_name"],er=e))
         raise NonRecoverableError(e)
 
-    
+
 @operation
 def delete_feed(**kwargs):
     '''

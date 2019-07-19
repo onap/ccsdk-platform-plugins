@@ -89,11 +89,11 @@ class DMaaPControllerHandle(object):
     ### PUBLIC API ###
 
     # Data Router Feeds
-    def create_feed(self, name, version=None, description=None, aspr_class=None, owner=None):
+    def create_feed(self, name, version=None, description=None, aspr_class=None, owner=None, useExisting=None):
         '''
         Create a DMaaP data router feed with the given feed name
         and (optionally) feed version, feed description, ASPR classification,
-        and owner
+        owner, and useExisting flag
         '''
         feed_definition = {'feedName' : name}
         if version:
@@ -104,8 +104,11 @@ class DMaaPControllerHandle(object):
             feed_definition['asprClassification'] = aspr_class
         if owner:
             feed_definition['owner'] = owner
+        feeds_path_query = self.feeds_path
+        if useExisting == True:                         # It's a boolean!
+            feeds_path_query += "?useExisting=true"
 
-        return self._create_resource(self.feeds_path, feed_definition)
+        return self._create_resource(feeds_path_query, feed_definition)
 
     def get_feed_info(self, feed_id):
         '''
@@ -197,12 +200,12 @@ class DMaaPControllerHandle(object):
         return self._delete_resource("{0}/{1}".format(self.subs_path, sub_id))
 
     # Message router topics
-    def create_topic(self, name, description = None, txenable = None, owner = None, replication_case = None, global_mr_url = None):
+    def create_topic(self, name, description = None, txenable = None, owner = None, replication_case = None, global_mr_url = None, useExisting = None):
         '''
         Create a message router topic with the topic name 'name' and optionally the topic_description
-        'description', the 'txenable' flag and the topic owner 'owner'.
+        'description', the 'txenable' flag, the 'useExisting' flag and the topic owner 'owner'.
         '''
-        topic_definition = {'topicName' : name};
+        topic_definition = {'topicName' : name}
         if description:
             topic_definition['topicDescription'] = description
         if owner:
@@ -213,8 +216,11 @@ class DMaaPControllerHandle(object):
             topic_definition['replicationCase'] = replication_case
         if global_mr_url:
             topic_definition['globalMrURL'] = global_mr_url
+        topics_path_query = self.topics_path
+        if useExisting == True:                         # It's a boolean!
+            topics_path_query += "?useExisting=true"
 
-        return self._create_resource(self.topics_path, topic_definition)
+        return self._create_resource(topics_path_query, topic_definition)
 
     def get_topic_info(self, fqtn):
         '''
