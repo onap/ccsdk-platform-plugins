@@ -22,32 +22,49 @@ This is a mock psycopg2 module.
 
 """
 
-class csr(object):
+class MockCursor(object):
+  """
+  mocked cursor
+  """
   def __init__(self, **kwargs):
     pass
 
-  def execute(self, cmd, exc = None):
+  def execute(self, cmd, exc=None):
+    """
+    mock SQL execution
+    """
     pass
-  
+
   def close(self):
+    """
+    mock SQL close
+    """
     pass
 
   def __iter__(self):
     return iter([])
-  
-class conn(object):
+
+class MockConn(object): # pylint: disable=too-few-public-methods
+  """
+  mock SQL connection
+  """
   def __init__(self, **kwargs):
     pass
 
   def __enter__(self):
     return self
-  
+
   def __exit__(self, exc_type, exc_value, traceback):
     pass
 
-  def cursor(self):
-    return csr()
+  def cursor(self): # pylint: disable=no-self-use
+    """
+    mock return a cursor
+    """
+    return MockCursor()
 
-def connect(**kwargs):
-  return conn()
-
+def connect(**kwargs): # pylint: disable=unused-argument
+  """
+  mock get-a-connection
+  """
+  return MockConn()
