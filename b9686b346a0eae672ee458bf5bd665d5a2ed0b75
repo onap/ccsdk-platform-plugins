@@ -16,6 +16,24 @@
       "revId": "b9686b346a0eae672ee458bf5bd665d5a2ed0b75",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "452e69f5_6f95f4b8",
+        "filename": "pgaas/tox.ini",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2019-08-07T15:18:20Z",
+      "side": 1,
+      "message": "Yes, it should.\n\nIn my local testing, one of the local cloudify mock libraries throws this error when run under python3:\n\nCollecting cloudify-dsl-parser\u003d\u003d4.2 (from cloudify\u003d\u003d4.2)\n  Using cached https://files.pythonhosted.org/packages/03/ce/657270bac703aff4d256b2df6f8ded4faf94d402bb6c384c94aea34fa1cc/cloudify-dsl-parser-4.2.tar.gz\n    ERROR: Complete output from command python setup.py egg_info:\n    ERROR: Traceback (most recent call last):\n      File \"\u003cstring\u003e\", line 1, in \u003cmodule\u003e\n      File \"/tmp/pip-install-na0vnt9d/cloudify-dsl-parser/setup.py\", line 29\n        except ImportError, e:\n                          ^\n    SyntaxError: invalid syntax\n\nI agree that we should at least try it with the Jenkins build.",
+      "parentUuid": "3be26dad_09bf9469",
+      "revId": "b9686b346a0eae672ee458bf5bd665d5a2ed0b75",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
