@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3be26dad_09bf9469",
+        "filename": "pgaas/tox.ini",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1907
+      },
+      "writtenOn": "2019-08-07T14:23:04Z",
+      "side": 1,
+      "message": "If the stated purpose of this change is to add support for Python 3, why is Python 3 commented out in the tox.ini.  Also, shouldn\u0027t it be a more recent version of Python 3?",
+      "revId": "b9686b346a0eae672ee458bf5bd665d5a2ed0b75",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
