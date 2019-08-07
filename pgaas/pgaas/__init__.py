@@ -1,3 +1,6 @@
+"""
+PostgreSQL plugin to manage passwords
+"""
 import logging
 
 def get_module_logger(mod_name):
