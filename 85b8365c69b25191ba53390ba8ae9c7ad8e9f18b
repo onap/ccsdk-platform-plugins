@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b86198f0_6b92a7a0",
+        "filename": "pgaas/pgaas/__init__.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 511
+      },
+      "writtenOn": "2019-08-14T17:25:13Z",
+      "side": 1,
+      "message": "This comment seems inappropriate.",
+      "revId": "85b8365c69b25191ba53390ba8ae9c7ad8e9f18b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "237fbaca_d2fe46ec",
+        "filename": "pgaas/pgaas/logginginterface.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 511
+      },
+      "writtenOn": "2019-08-14T17:25:13Z",
+      "side": 1,
+      "message": "Comment seems inappropriate.",
+      "revId": "85b8365c69b25191ba53390ba8ae9c7ad8e9f18b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f183ed07_ac440971",
+        "filename": "pgaas/pgaas/pgaas_plugin.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 511
+      },
+      "writtenOn": "2019-08-14T17:25:13Z",
+      "side": 1,
+      "message": "This looks like a reference to Python2, but it isn\u0027t guarded by if USING_PYTHON2.",
+      "revId": "85b8365c69b25191ba53390ba8ae9c7ad8e9f18b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a630499_a51acb48",
+        "filename": "pgaas/tests/test_plugin.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 511
+      },
+      "writtenOn": "2019-08-14T17:25:13Z",
+      "side": 1,
+      "message": "Seems inappropriate.",
+      "revId": "85b8365c69b25191ba53390ba8ae9c7ad8e9f18b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
