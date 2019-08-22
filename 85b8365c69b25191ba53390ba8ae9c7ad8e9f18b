@@ -1,0 +1,8 @@
+Code-Review+1: Andrew Gauld <agauld@att.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Dan Timoney <dtimoney@att.com>
+Submitted-by: Dan Timoney <dtimoney@att.com>
+Submitted-at: Thu, 22 Aug 2019 22:07:46 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/ccsdk/platform/plugins/+/92898
+Project: ccsdk/platform/plugins
+Branch: refs/heads/master
