@@ -8,7 +8,7 @@ project_lead: &onap_releng_ptl
     email: 'dtimoney@att.com'
     id: 'djtimoney'
     company: 'ATT'
-    timezone: 'America/New York'
+    timezone: 'America/New_York'
 primary_contact: *onap_releng_ptl
 issue_tracking:
     type: 'jira'
@@ -22,7 +22,7 @@ realtime_discussion: ''
 meetings:
     - type: 'zoom'
       agenda: 'https://wiki.onap.org/display/DW/Common+Controller+SDK+Project'
-      url: 'https://wiki.onap.org/display/DW/Common+Controller+SDK+Project#CommonControllerSDKProject-MeetingMinutes'
+      url: 'https://wiki.onap.org/display/DW/Common+Controller+SDK+Project'
       server: 'n/a'
       channel: 'n/a'
       repeats: 'weekly'
@@ -33,39 +33,25 @@ committers:
       email: 'jflucas@research.att.com'
       company: 'ATT'
       id: 'jackl'
-      timezone: 'America/New York'
+      timezone: 'America/New_York'
     - name: 'Jun (Nicolas) Hu'
       email: 'jh245g@att.com'
       company: 'ATT'
       id: 'jh245g'
-      timezone: 'America/New York'
+      timezone: 'America/New_York'
     - name: 'Gaurav Agrawal'
       email: 'gaurav.agrawal@huawei.com'
       company: 'Huawei'
       id: 'agrawalgaurav'
       timezone: 'Asia/Kolkata'
 repositories:
-    - ccsdk-apps
-    - ccsdk-cds
-    - ccsdk-distribution
-    - ccsdk-features
-    - ccsdk-parent
-    - ccsdk-platform-blueprints
-    - ccsdk-platform-plugins
-    - ccsdk-sli-adaptors
-    - ccsdk-sli-core
-    - ccsdk-sli-northbound
-    - ccsdk-sli-plugins
-    - ccsdk-storage-esaas
-    - ccsdk-utils
+    - ccsdk/platform/plugins
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
     changes:
         - type: 'Deletion'
           name: 'Ryan Goulding'
           link: 'https://lists.onap.org/g/onap-tsc/message/4261'
-    changes:
         - type: 'Addition'
           name: 'Gaurav Agrawal'
           link: 'https://lists.onap.org/g/onap-tsc/message/4324'
-
