@@ -89,7 +89,7 @@ test)
     pip install --upgrade pip
     pip install -U setuptools
     pip install tox
-    (cd $PLUGIN_SUBDIR; tox)
+    (cd $PLUGIN_SUBDIR; tox; egrep "<package |<class " coverage.xml)
     deactivate
     rm -rf .testenv
     set +e +x
