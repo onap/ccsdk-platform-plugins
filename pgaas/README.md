@@ -16,6 +16,9 @@ Note: Cloudify Manager, itself, requires Python 2.7.x (and Centos 7).
 
 # Types
 ## dcae.nodes.pgaas.cluster
+
+This node type deals with the information about the database cluster and server as a whole.
+
 **Derived From:** cloudify.nodes.Root
 
 **Properties:**
@@ -31,6 +34,8 @@ must not have any `dcae.relationships.pgaas_cluster_uses_sshkeypair`
 relationships.  If it is `false`, then this node must have exactly one
 `dcae.relationships.pgaas_cluster_uses_sshkeypair` relationship.
 * `readerfqdn` (optional string default=value of `writerfqdn`)  The FQDN used for read-only access to the cluster containing the postgres database instance, if different than the FQDN used for read-write access.  This will be used by viewer roles.
+* `port` (optional string default=5432) The port used to access the server.
+* `initialpassword` (optional string default=`''`) An existing PostgreSQL instance's `postgres` role's password. Used when the plugin is taking over the management of the PostgreSQL server's passwords. The `postgres` role's password will be changed from this.
 
 **Mapped Operations:**
 
@@ -77,3 +82,8 @@ The keys in the access information dicts are as follows:
 **Description:** A relationship for binding a dcae.nodes.pgaas.database node to the dcae.nodes.pgaas.cluster node that contains the application database.  A dcae.nodes.pgaas.database node must have either such a relationship or a writerfqdn property.  The writerfqdn property cannot be used if the cluster is created in the same blueprint as the application database.
 ## dcae.relationships.application_uses_pgaas_database
 **Description:** A relationship for binding a node that needs application database access information to the dcae.nodes.pgaas.database node for that application database.
+
+# Workflows
+## update_db_passwd
+
+Change the password for the database associated with the deployment.
