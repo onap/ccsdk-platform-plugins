@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Dan Timoney <dtimoney@att.com>
+Code-Review+1: Brinda Santh Muthuramalingam <brindasanth@in.ibm.com>
+Code-Review+2: Jun (Nicolas) Hu <jun.nicolas.hu@att.com>
+Submitted-by: Dan Timoney <dtimoney@att.com>
+Submitted-at: Thu, 26 Sep 2019 21:48:45 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/ccsdk/platform/plugins/+/96288
+Project: ccsdk/platform/plugins
+Branch: refs/heads/master
