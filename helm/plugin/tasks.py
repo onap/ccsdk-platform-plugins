@@ -37,9 +37,17 @@ from cloudify.decorators import operation
 from cloudify import exceptions
 from cloudify.exceptions import NonRecoverableError
 
+def debug_log_mask_credentials(_command_str):
+    debug_str = _command_str
+    if _command_str.find("@") != -1:
+        head, end = _command_str.rsplit('@', 1)
+        proto, auth = head.rsplit('//', 1)
+        uname, passwd = auth.rsplit(':', 1)
+        debug_str = _command_str.replace(passwd, "************")
+    ctx.logger.debug('command {0}.'.format(debug_str))
 
 def execute_command(_command):
-    ctx.logger.debug('_command {0}.'.format(_command))
+    debug_log_mask_credentials(_command)
 
     subprocess_args = {
         'args': _command.split(),
@@ -47,7 +55,7 @@ def execute_command(_command):
         'stderr': subprocess.PIPE
     }
 
-    ctx.logger.debug('subprocess_args {0}.'.format(subprocess_args))
+    debug_log_mask_credentials(str(subprocess_args))
     try:
         process = subprocess.Popen(**subprocess_args)
         output, error = process.communicate()
@@ -55,13 +63,13 @@ def execute_command(_command):
         ctx.logger.debug(str(e))
         return False
 
-    ctx.logger.debug('command: {0} '.format(_command))
+    debug_log_mask_credentials(_command)
     ctx.logger.debug('output: {0} '.format(output))
     ctx.logger.debug('error: {0} '.format(error))
     ctx.logger.debug('process.returncode: {0} '.format(process.returncode))
 
     if process.returncode:
-        ctx.logger.error('Running `{0}` returns error.'.format(_command))
+        ctx.logger.error('Error was returned while running helm command')
         return False
 
     return output
