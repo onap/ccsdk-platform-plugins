@@ -35,13 +35,14 @@ setup(
 
     license='LICENSE',
     zip_safe=False,
-    install_requires=[
-        # Necessary dependency for developing plugins, do not remove!
-        'pyyaml>=3.12',
-        "cloudify-plugins-common>=4.1.1"
-    ],
-    test_requires=[
-        "cloudify-dsl-parser>=4.1.1"
-        "nose"
-    ]
+    #install_requires=[
+    #    'pyyaml>=3.12',
+    #    'cloudify-plugins-common==4.1.1; python_version<"3"',
+    #    'cloudify-rest-client==4.1.1; python_version<"3"',
+    #    'cloudify-common>=5.0.5; python_version>="3"',
+    #],
+    #test_requires=[
+    #    'cloudify-dsl-parser==4.1.1; python_version<"3"',
+    #    'nose',
+    #],
 )

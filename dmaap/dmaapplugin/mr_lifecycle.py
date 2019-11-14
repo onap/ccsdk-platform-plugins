@@ -20,7 +20,7 @@ from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError
 from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, DMAAP_OWNER
-from dmaaputils import random_string
+from dmaapplugin.dmaaputils import random_string
 from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
 
 # Lifecycle operations for DMaaP Message Router topics

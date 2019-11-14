@@ -189,9 +189,9 @@ _answers = [
               'publicURL': 'https://example.com/dns',
               'region': 'r'
             },
-	    {
-	      'publicURL': 'https://example.com/otherregions'
-	    }
+            {
+              'publicURL': 'https://example.com/otherregions'
+            }
           ]
         }
       ]

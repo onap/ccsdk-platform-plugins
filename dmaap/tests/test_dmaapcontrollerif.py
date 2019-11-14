@@ -53,21 +53,23 @@ def test_dmaapc (monkeypatch, mockconsul, mockdmaapbc):
     assert DMAAP_API_URL != None
 
     properties = {'fqdn': 'a.x.example.com', 'openstack': _goodosv2 }
-    mock_ctx = MockCloudifyContext(node_id='test_node_id', node_name='test_node_name', properties=properties,
-		                runtime_properties = {
-                                   "admin": { "user": "admin_user" },
-                                   "user": { "user": "user_user" },
-                                   "viewer": { "user": "viewer_user" }
-                                   }
-				)
+    mock_ctx = MockCloudifyContext(
+        node_id='test_node_id',
+        node_name='test_node_name',
+        properties=properties,
+        runtime_properties = {
+            "admin": { "user": "admin_user" },
+            "user": { "user": "user_user" },
+            "viewer": { "user": "viewer_user" }
+        })
 
     try:
         current_ctx.set(mock_ctx)
     except Exception as e:
-        raise NonRecoverableError(e) 
+        raise NonRecoverableError(e)
 #    finally:
 #        current_ctx.clear()
-   
+
     kwargs = { "topic_name": "ONAP_test",
             "topic_description": "onap dmaap plugin unit test topic"}
 
@@ -117,10 +119,10 @@ def test_dmaapc (monkeypatch, mockconsul, mockdmaapbc):
     try:
         path = "myPath"
         url = dmc._make_url(path)
-	rc = dmc._get_resource(path)
+        rc = dmc._get_resource(path)
         rc = dmc._create_resource(path, None)
         rc = dmc._delete_resource(path)
- 
+
     except Exception as e:
         raise NonRecoverableError(e)
 
