@@ -287,14 +287,15 @@ class DMaaPControllerHandle(object):
         locations.raise_for_status()
 
         # pull out location names for VALID locations with matching dcae_layer
-        return  map(lambda l: l["dcaeLocationName"],
-                    filter(lambda i : (i['dcaeLayer'] == dcae_layer and i['status'] == 'VALID'),
-                       locations.json()))
+        return [location["dcaeLocationName"] for location in locations.json()
+                if location['dcaeLayer'] == dcae_layer
+                and location['status'] == 'VALID']
 
     def get_dcae_central_locations(self):
         '''
         Get the list of location names known to the DMaaP bus controller
-        whose "dcaeLayer" property contains "central" (ignoring case) and whose status is "VALID".
+        whose "dcaeLayer" property contains "central" (ignoring case)
+        and whose status is "VALID".
         "dcaeLayer" contains "central" for central sites.
         '''
         # Do these as a separate step so things like 404 get reported precisely
@@ -302,7 +303,7 @@ class DMaaPControllerHandle(object):
         locations.raise_for_status()
 
         # pull out location names for VALID central locations
-        return  map(lambda l: l["dcaeLocationName"],
-                    filter(lambda i : ('central' in i['dcaeLayer'].lower() and i['status'] == 'VALID'),
-                       locations.json()))
+        return [location["dcaeLocationName"] for location in locations.json()
+                if 'central' in location['dcaeLayer'].lower()
+                and location['status'] == 'VALID']
 

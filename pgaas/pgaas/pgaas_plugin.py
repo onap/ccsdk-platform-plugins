@@ -22,22 +22,6 @@ PostgreSQL plugin to manage passwords
 
 from __future__ import print_function
 import sys
-USING_PYTHON2 = sys.version_info[0] < 3
-
-# pylint: disable=wrong-import-position
-# pylint: disable=wrong-import-order
-# pylint: disable=import-error
-from cloudify import ctx
-from cloudify.decorators import operation
-from cloudify.exceptions import NonRecoverableError
-from cloudify.exceptions import RecoverableError
-
-# pylint: disable=wildcard-import
-if USING_PYTHON2:
-  from logginginterface import debug, info, warn, error
-else:
-  from .logginginterface import debug, info, warn, error
-
 import os
 import re
 import json
@@ -45,20 +29,31 @@ import hashlib
 import socket
 import traceback
 import base64
-if USING_PYTHON2:
-  import urllib
-else:
-  import urllib.request
-  import urllib.parse
-  import urllib.error
+import binascii
 import collections
+try:
+  from urllib.parse import quote
+except ImportError:
+  from urllib import quote
 
+from cloudify import ctx
+from cloudify.decorators import operation
+from cloudify.exceptions import NonRecoverableError
+from cloudify.exceptions import RecoverableError
 
-SYSPATH = sys.path
-sys.path = list(SYSPATH)
-sys.path.append('/usr/lib64/python2.7/site-packages')
-import psycopg2
-sys.path = SYSPATH
+try:
+    import psycopg2
+except ImportError:
+    # FIXME: any users of this plugin installing its dependencies in nonstandard
+    # directories should set up PYTHONPATH accordingly, outside the program code
+    SYSPATH = sys.path
+    sys.path = list(SYSPATH)
+    sys.path.append('/usr/lib64/python2.7/site-packages')
+    import psycopg2
+    sys.path = SYSPATH
+
+from pgaas.logginginterface import debug, info, warn, error
+
 
 """
   To set up a cluster:
@@ -185,8 +180,7 @@ def safestr(s):
   """
   returns a safely printable version of the string
   """
-  # pylint: disable=no-member
-  return urllib.quote(str(s), '') if USING_PYTHON2 else urllib.parse.quote(str(s), '')
+  return quote(str(s), '')
 
 def raiseRecoverableError(msg):
   """
@@ -739,7 +733,6 @@ def update_database(refctx, **kwargs):
       with open(hostPortDbname, "a") as fp:
         with open("/dev/urandom", "rb") as rp:
           b = rp.read(16)
-          import binascii
           print(binascii.hexlify(b).decode('utf-8'), file=fp)
           appended = True
       if not appended:

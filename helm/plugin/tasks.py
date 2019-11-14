@@ -15,7 +15,6 @@
 # limitations under the License.
 # ============LICENSE_END============================================
 
-from cloudify.decorators import operation
 import shutil
 import errno
 import sys
@@ -25,17 +24,21 @@ import os
 import re
 import getpass
 import subprocess
-from cloudify import ctx
-from cloudify.exceptions import OperationRetry
-from cloudify_rest_client.exceptions import CloudifyClientError
-import pip
 import json
 import base64
 import yaml
-import urllib2
-from cloudify.decorators import operation
+try:
+    from urllib.request import Request, urlopen
+except ImportError:
+    from urllib2 import Request, urlopen
+
+from cloudify import ctx
 from cloudify import exceptions
+from cloudify.decorators import operation
+from cloudify.exceptions import OperationRetry
 from cloudify.exceptions import NonRecoverableError
+from cloudify_rest_client.exceptions import CloudifyClientError
+
 
 def debug_log_mask_credentials(_command_str):
     debug_str = _command_str
@@ -186,18 +189,18 @@ def pop_config_info(url, config_file, f_format, repo_user, repo_user_passwd):
         head, auth = head.rsplit('//', 1)
         url = head + '//' + end
         username, password = auth.rsplit(':', 1)
-        request = urllib2.Request(url)
+        request = Request(url)
         base64string = base64.encodestring(
             '%s:%s' % (username, password)).replace('\n', '')
         request.add_header("Authorization", "Basic %s" % base64string)
-        response = urllib2.urlopen(request)
+        response = urlopen(request)
     elif repo_user != '' and repo_user_passwd != '':
-        request = urllib2.Request(url)
+        request = Request(url)
         base64string = base64.b64encode('%s:%s' % (repo_user, repo_user_passwd))
         request.add_header("Authorization", "Basic %s" % base64string)
-        response = urllib2.urlopen(request)
+        response = urlopen(request)
     else:
-        response = urllib2.urlopen(url)
+        response = urlopen(url)
 
     config_obj = {}
     if f_format == 'json':

@@ -25,7 +25,7 @@ import os
 from consulif.consulif import ConsulHandle
 
 
-#When run unit test, please update the consul interface parameters based on local consul configuration. 
+#When run unit test, please update the consul interface parameters based on local consul configuration.
 CONSUL_HOST = "consul"                      # Should always be a local consul agent on Cloudify Manager
 #CONSUL_PORT = '8510'
 CONSUL_PORT = '8500'
@@ -52,7 +52,7 @@ def test_get_config_service(monkeypatch):
     err_msg = "Error getting ConsulHandle when configuring dmaap plugin: {0}"
     _ch = ConsulHandle("http://{0}:{1}".format(CONSUL_HOST, CONSUL_PORT), None, None, None)
     assert None != _ch
-    
+
     err_msg = "Error getting config for '{0}' from ConsulHandle when configuring dmaap plugin: ".format(DBCL_KEY_NAME) + "{0}"
     config = _ch.get_config(DBCL_KEY_NAME)
 
@@ -84,7 +84,7 @@ def test_get_config_service(monkeypatch):
     DMAAP_API_URL = '{0}://{1}:{2}/{3}'.format(DMAAP_PROTOCOL, service_address, service_port, DMAAP_PATH)
     assert DMAAP_API_URL != None
     dmaap_config = {'DMAAP_USER':DMAAP_USER, 'DMAAP_API_URL':DMAAP_API_URL, 'DMAAP_PASS':DMAAP_PASS, 'DMAAP_OWNER':DMAAP_OWNER}
-    print "return dmaap config info from consul: {0}".format(dmaap_config)
+    print("return dmaap config info from consul: {0}".format(dmaap_config))
     return dmaap_config
 
   except Exception as e:

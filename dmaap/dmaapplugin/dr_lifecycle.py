@@ -20,7 +20,7 @@ from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError
 from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, DMAAP_OWNER
-from dmaaputils import random_string
+from dmaapplugin.dmaaputils import random_string
 from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
 
 # Lifecycle operations for DMaaP Data Router feeds
@@ -47,19 +47,19 @@ def create_feed(**kwargs):
             feed_name = random_string(12)
 
         # Set defaults/placeholders for the optional properties for the feed
-        if "feed_version" in ctx.node.properties.keys():
+        if "feed_version" in ctx.node.properties:
             feed_version = ctx.node.properties["feed_version"]
         else:
             feed_version = "0.0"
-        if "feed_description" in ctx.node.properties.keys():
+        if "feed_description" in ctx.node.properties:
             feed_description = ctx.node.properties["feed_description"]
         else:
             feed_description = "No description provided"
-        if "aspr_classification" in ctx.node.properties.keys():
+        if "aspr_classification" in ctx.node.properties:
             aspr_classification = ctx.node.properties["aspr_classification"]
         else:
             aspr_classification = "unclassified"
-        if "useExisting" in ctx.node.properties.keys():
+        if "useExisting" in ctx.node.properties:
             useExisting = ctx.node.properties["useExisting"]
         else:
             useExisting = False
@@ -98,10 +98,10 @@ def get_existing_feed(**kwargs):
         dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
         ctx.logger.info("DMaaPControllerHandle() returned")
         feed_id_input = False
-        if "feed_id" in ctx.node.properties.keys():
+        if "feed_id" in ctx.node.properties:
             feed_id_input = True
             f = dmc.get_feed_info(ctx.node.properties["feed_id"])
-        elif "feed_name" in ctx.node.properties.keys():
+        elif "feed_name" in ctx.node.properties:
             feed_name = ctx.node.properties["feed_name"]
             f = dmc.get_feed_info_by_name(feed_name)
             if f is None:

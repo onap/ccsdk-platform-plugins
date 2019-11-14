@@ -21,7 +21,7 @@ from consulif.consulif import ConsulHandle
 from cloudify.exceptions import NonRecoverableError
 import os
 
-os.environ["REQUESTS_CA_BUNDLE"]="/opt/onap/certs/cacert.pem" 	# This is to handle https request thru plugin
+os.environ["REQUESTS_CA_BUNDLE"]="/opt/onap/certs/cacert.pem"  # This is to handle https request thru plugin
 
 CONSUL_HOST = "consul"                      # Should always be a local consul agent on Cloudify Manager
 DBCL_KEY_NAME = "dmaap-plugin"              # Consul key containing DMaaP data bus credentials
