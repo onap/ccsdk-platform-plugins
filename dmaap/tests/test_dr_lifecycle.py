@@ -41,21 +41,23 @@ def test_create_feed(monkeypatch, mockdmaapbc):
     from dmaapplugin import dr_lifecycle
 
     properties = {'fqdn': 'a.x.example.com', 'openstack': _goodosv2, 'feed_id': 'test_feed_id' }
-    mock_ctx = MockCloudifyContext(node_id='test_node_id', node_name='test_node_name', properties=properties,
-		                runtime_properties = {
-                                   "admin": { "user": "admin_user" },
-                                   "user": { "user": "user_user" },
-                                   "viewer": { "user": "viewer_user" }
-                                   }
-				)
+    mock_ctx = MockCloudifyContext(
+        node_id='test_node_id',
+        node_name='test_node_name',
+        properties=properties,
+        runtime_properties = {
+            "admin": { "user": "admin_user" },
+            "user": { "user": "user_user" },
+            "viewer": { "user": "viewer_user" }
+        })
 
     try:
         current_ctx.set(mock_ctx)
     except Exception as e:
-        raise NonRecoverableError(e) 
+        raise NonRecoverableError(e)
 #    finally:
 #        current_ctx.clear()
-   
+
     kwargs = { "feed_name": "ONAP_test",
             "feed_description": "onap dmaap plugin unit test feed"}
 

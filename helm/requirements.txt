@@ -1,0 +1,6 @@
+pyyaml>=3.12
+#cloudify-dsl-parser @ https://github.com/cloudify-cosmo/cloudify-dsl-parser/archive/4.1.1.zip#egg=cloudify-dsl-parser==4.1.1; python_version<"3"
+#cloudify-rest-client @ https://github.com/cloudify-cosmo/cloudify-rest-client/archive/4.1.1.zip#egg=cloudify-rest-client==4.1.1; python_version<"3"
+#cloudify-plugins-common @ https://github.com/cloudify-cosmo/cloudify-plugins-common/archive/4.1.1.zip#egg=cloudify-plugins-common==4.1.1; python_version<"3"
+cloudify-common==5.0.0; python_version<"3"
+cloudify-common @ git+https://github.com/cloudify-cosmo/cloudify-common@cy-1374-python3#egg=cloudify-common==5.0.0; python_version>="3"

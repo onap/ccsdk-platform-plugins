@@ -18,7 +18,6 @@
 from cloudify.decorators import workflow
 from cloudify.workflows import ctx
 from cloudify.exceptions import NonRecoverableError
-import urllib2
 import json
 import yaml
 import base64

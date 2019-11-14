@@ -39,19 +39,21 @@ def test_create_topic(monkeypatch, mockdmaapbc):
     import dmaapplugin
     from dmaapplugin import mr_lifecycle
     properties = {'fqdn': 'a.x.example.com', 'openstack': _goodosv2, 'fqtn': 'test_fqtn' }
-    mock_ctx = MockCloudifyContext(node_id='test_node_id', node_name='test_node_name', properties=properties,
-		                runtime_properties = {
-                                   "admin": { "user": "admin_user" },
-                                   "user": { "user": "user_user" },
-                                   "viewer": { "user": "viewer_user" }
-                                   }
-				)
+    mock_ctx = MockCloudifyContext(
+        node_id='test_node_id',
+        node_name='test_node_name',
+        properties=properties,
+        runtime_properties = {
+           "admin": { "user": "admin_user" },
+           "user": { "user": "user_user" },
+           "viewer": { "user": "viewer_user" }
+        })
 
     try:
         current_ctx.set(mock_ctx)
     except Exception as e:
-        raise NonRecoverableError(e) 
-   
+        raise NonRecoverableError(e)
+
     kwargs = { "topic_name": "ONAP_test",
             "topic_description": "onap dmaap plugin unit test topic"}
 
