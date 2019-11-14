@@ -1,6 +1,7 @@
 # ============LICENSE_START==========================================
 # ===================================================================
 # Copyright (c) 2018 AT&T
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +25,7 @@ setup(
 
     # Do not use underscores in the plugin name.
     name='helm',
-    version='4.0.2',
+    version='4.1.0',
     author='Nicolas Hu(AT&T)',
     author_email='jh245g@att.com',
     description='This plugin will install/uninstall/upgrade/rollback helm '
@@ -36,12 +37,12 @@ setup(
     license='LICENSE',
     zip_safe=False,
     install_requires=[
-        # Necessary dependency for developing plugins, do not remove!
         'pyyaml>=3.12',
-        "cloudify-plugins-common>=4.1.1"
+        # The package specified by requirements would be replaced with 5.0.5.1+
+        # when this package is installed. That currently breaks on python3.
+        #'cloudify-common>=5.0.5',
     ],
     test_requires=[
-        "cloudify-dsl-parser>=4.1.1"
-        "nose"
-    ]
+        'nose',
+    ],
 )

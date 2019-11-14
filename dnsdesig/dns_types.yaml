@@ -24,7 +24,7 @@ plugins:
   dns_designate:
     executor: central_deployment_agent
     package_name: dnsdesig
-    package_version: 1.0.0
+    package_version: 1.1.0
 
 node_types:
   ccsdk.nodes.dns.arecord:
