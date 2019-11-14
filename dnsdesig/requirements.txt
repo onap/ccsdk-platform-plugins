@@ -1,0 +1,2 @@
+requests
+cloudify-common>=5.0.5

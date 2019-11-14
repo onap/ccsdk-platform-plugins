@@ -2,6 +2,7 @@
 # org.onap.ccsdk
 # =============================================================================
 # Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +19,11 @@
 
 import consul
 import json
-from urlparse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
+
 
 class ConsulHandle(object):
     '''

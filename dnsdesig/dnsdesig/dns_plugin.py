@@ -2,13 +2,14 @@
 # org.onap.ccsdk
 # =============================================================================
 # Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +18,6 @@
 # ============LICENSE_END======================================================
 
 import requests
-from urlparse import urlparse
 from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError, RecoverableError
@@ -34,8 +34,8 @@ def _get_auth_info(openstack):
     (tok, gbls, urls) = _get_auth_info_v2(openstack)
   else:
     (tok, gbls, urls) = _get_auth_info_v3(openstack)
-  if len(urls.keys()) == 1:
-    reg = urls.keys()[0]
+  if len(urls) == 1:
+    reg = list(urls)[0]
   else:
     reg = openstack['region']
   if reg in urls and 'dns' in urls[reg]:

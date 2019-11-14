@@ -1,6 +1,7 @@
 # ============LICENSE_START==========================================
 # ===================================================================
 # Copyright (c) 2018 AT&T
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +19,6 @@
 from cloudify.decorators import workflow
 from cloudify.workflows import ctx
 from cloudify.exceptions import NonRecoverableError
-import urllib2
 import json
 import yaml
 import base64
