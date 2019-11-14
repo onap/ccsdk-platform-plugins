@@ -2,6 +2,7 @@
 # org.onap.ccsdk
 # =============================================================================
 # Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +22,7 @@ from consulif.consulif import ConsulHandle
 from cloudify.exceptions import NonRecoverableError
 import os
 
-os.environ["REQUESTS_CA_BUNDLE"]="/opt/onap/certs/cacert.pem" 	# This is to handle https request thru plugin
+os.environ["REQUESTS_CA_BUNDLE"]="/opt/onap/certs/cacert.pem"  # This is to handle https request thru plugin
 
 CONSUL_HOST = "consul"                      # Should always be a local consul agent on Cloudify Manager
 DBCL_KEY_NAME = "dmaap-plugin"              # Consul key containing DMaaP data bus credentials

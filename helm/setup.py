@@ -1,6 +1,7 @@
 # ============LICENSE_START==========================================
 # ===================================================================
 # Copyright (c) 2018 AT&T
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,12 +37,10 @@ setup(
     license='LICENSE',
     zip_safe=False,
     install_requires=[
-        # Necessary dependency for developing plugins, do not remove!
         'pyyaml>=3.12',
-        "cloudify-plugins-common>=4.1.1"
+        'cloudify-common>=5.0.5',
     ],
     test_requires=[
-        "cloudify-dsl-parser>=4.1.1"
-        "nose"
-    ]
+        'nose',
+    ],
 )

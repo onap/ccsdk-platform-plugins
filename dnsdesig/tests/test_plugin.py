@@ -2,6 +2,7 @@
 # org.onap.ccsdk
 # =============================================================================
 # Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -189,9 +190,9 @@ _answers = [
               'publicURL': 'https://example.com/dns',
               'region': 'r'
             },
-	    {
-	      'publicURL': 'https://example.com/otherregions'
-	    }
+            {
+              'publicURL': 'https://example.com/otherregions'
+            }
           ]
         }
       ]

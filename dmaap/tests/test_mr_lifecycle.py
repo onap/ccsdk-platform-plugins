@@ -2,6 +2,7 @@
 # org.onap.dcae
 # ================================================================================
 # Copyright (c) 2017-2018 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -40,13 +41,15 @@ def test_create_topic(monkeypatch, mockconsul, mockdmaapbc):
     import dmaapplugin
     from dmaapplugin import mr_lifecycle
     properties = {'fqdn': 'a.x.example.com', 'openstack': _goodosv2, 'fqtn': 'test_fqtn' }
-    mock_ctx = MockCloudifyContext(node_id='test_node_id', node_name='test_node_name', properties=properties,
-		                runtime_properties = {
-                                   "admin": { "user": "admin_user" },
-                                   "user": { "user": "user_user" },
-                                   "viewer": { "user": "viewer_user" }
-                                   }
-				)
+    mock_ctx = MockCloudifyContext(
+        node_id='test_node_id',
+        node_name='test_node_name',
+        properties=properties,
+        runtime_properties = {
+           "admin": { "user": "admin_user" },
+           "user": { "user": "user_user" },
+           "viewer": { "user": "viewer_user" }
+        })
 
     current_ctx.set(mock_ctx)
 
