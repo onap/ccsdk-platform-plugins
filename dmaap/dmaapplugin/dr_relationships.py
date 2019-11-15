@@ -107,7 +107,7 @@ def delete_dr_publisher(**kwargs):
         # Get the publisher id
         target_feed = ctx.target.node.id
         publisher_id = ctx.source.instance.runtime_properties[target_feed]["publisher_id"]
-        ctx.logger.info("Attempting to delete publisher {0}".format(publisher_id, target_feed))
+        ctx.logger.info("Attempting to delete publisher {0}".format(publisher_id))
 
         # Make the request
         dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)

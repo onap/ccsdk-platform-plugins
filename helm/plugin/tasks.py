@@ -168,7 +168,7 @@ def str_to_bool(s):
     elif s == 'False' or s == 'false':
         return False
     else:
-        raise False
+        raise ValueError('Require [Tt]rue or [Ff]alse; got: {0}'.format(s))
 
 
 def get_config_json(config_json, config_path, config_opt_f, config_file_nm):

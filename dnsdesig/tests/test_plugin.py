@@ -372,7 +372,7 @@ def test_dns_delcname():
   dnsdesig.dns_plugin.cnamenotneeded()
 
 @_setup(_goodos, 'noservice.x.example.com')
-def test_dns_delcname():
+def test_dns_delbadcname():
   with pytest.raises(RecoverableError):
     dnsdesig.dns_plugin.cnamenotneeded()
 
