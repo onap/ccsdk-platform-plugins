@@ -325,7 +325,7 @@ def getpass(data, ident, hostport, dbname):
   generate the password for a given user on a specific server
   """
   m = hashlib.sha256()
-  m.update(ident)
+  m.update(ident.encode())
 
   # mix in the seed (the last line) for that database, if one exists
   hostport = hostport.lower()
@@ -336,7 +336,7 @@ def getpass(data, ident, hostport, dbname):
     with open(hostPortDbname, "r") as fp:
       for line in fp:
         lastLine = line
-    m.update(lastLine)
+    m.update(lastLine.encode())
   except IOError:
     pass
 
