@@ -178,6 +178,7 @@ def test_add_pgaas_cluster(monkeypatch):
   except Exception as e:
     print("Error: {0}".format(e))
     print("Stack: {0}".format(traceback.format_exc()))
+    raise
   finally:
     current_ctx.clear()
 
@@ -192,6 +193,7 @@ def test_add_database(monkeypatch):
   except Exception as e:
     print("Error: {0}".format(e))
     print("Stack: {0}".format(traceback.format_exc()))
+    raise
   finally:
     current_ctx.clear()
 
@@ -207,6 +209,7 @@ def test_bad_add_database(monkeypatch):
   except Exception as e:
     print("Error: {0}".format(e))
     print("Stack: {0}".format(traceback.format_exc()))
+    raise
   finally:
     current_ctx.clear()
 
@@ -249,10 +252,11 @@ def test_update_database(monkeypatch):
     # pylint: disable=protected-access
     mynode.properties = mynode._properties
     myctx.nodes = [mynode]
-    pgaas.pgaas_plugin.update_database(ctx=myctx, args={})
+    pgaas.pgaas_plugin.update_database(refctx=myctx)
   except Exception as e:
     print("Error: {0}".format(e))
     print("Stack: {0}".format(traceback.format_exc()))
+    raise
   finally:
     current_ctx.clear()
 
@@ -267,6 +271,7 @@ def test_delete_database(monkeypatch):
   except Exception as e:
     print("Error: {0}".format(e))
     print("Stack: {0}".format(traceback.format_exc()))
+    raise
   finally:
     current_ctx.clear()
 
@@ -281,5 +286,6 @@ def test_rm_pgaas_cluster(monkeypatch):
   except Exception as e:
     print("Error: {0}".format(e))
     print("Stack: {0}".format(traceback.format_exc()))
+    raise
   finally:
     current_ctx.clear()
