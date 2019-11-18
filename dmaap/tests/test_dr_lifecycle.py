@@ -36,7 +36,7 @@ _goodosv2 = {
 }
 
 
-def test_create_feed(monkeypatch, mockdmaapbc):
+def test_create_feed(monkeypatch, mockconsul, mockdmaapbc):
     import dmaapplugin
     from dmaapplugin import dr_lifecycle
 
@@ -49,13 +49,8 @@ def test_create_feed(monkeypatch, mockdmaapbc):
                                    }
 				)
 
-    try:
-        current_ctx.set(mock_ctx)
-    except Exception as e:
-        raise NonRecoverableError(e) 
-#    finally:
-#        current_ctx.clear()
-   
+    current_ctx.set(mock_ctx)
+
     kwargs = { "feed_name": "ONAP_test",
             "feed_description": "onap dmaap plugin unit test feed"}
 
@@ -63,10 +58,6 @@ def test_create_feed(monkeypatch, mockdmaapbc):
         return {"feedId":"test_feedId", "publishURL":"test_publishURL", "logURL":"test_logURL" }
     monkeypatch.setattr(requests.Response, "json", fake_feed)
 
-    try:
-        dr_lifecycle.create_feed(**kwargs)
-        dr_lifecycle.get_existing_feed(**kwargs)
-        dr_lifecycle.delete_feed(**kwargs)
-
-    except Exception as e:
-        raise NonRecoverableError(e)
+    dr_lifecycle.create_feed(**kwargs)
+    dr_lifecycle.get_existing_feed(**kwargs)
+    dr_lifecycle.delete_feed(**kwargs)

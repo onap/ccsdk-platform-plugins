@@ -35,7 +35,8 @@ _goodosv2 = {
   'username': 'un'
 }
 
-def test_create_topic(monkeypatch, mockdmaapbc):
+
+def test_create_topic(monkeypatch, mockconsul, mockdmaapbc):
     import dmaapplugin
     from dmaapplugin import mr_lifecycle
     properties = {'fqdn': 'a.x.example.com', 'openstack': _goodosv2, 'fqtn': 'test_fqtn' }
@@ -47,18 +48,11 @@ def test_create_topic(monkeypatch, mockdmaapbc):
                                    }
 				)
 
-    try:
-        current_ctx.set(mock_ctx)
-    except Exception as e:
-        raise NonRecoverableError(e) 
-   
+    current_ctx.set(mock_ctx)
+
     kwargs = { "topic_name": "ONAP_test",
             "topic_description": "onap dmaap plugin unit test topic"}
 
-    try:
-        mr_lifecycle.create_topic(**kwargs)
-        mr_lifecycle.get_existing_topic(**kwargs)
-        mr_lifecycle.delete_topic(**kwargs)
-
-    except Exception as e:
-        raise NonRecoverableError(e)
+    mr_lifecycle.create_topic(**kwargs)
+    mr_lifecycle.get_existing_topic(**kwargs)
+    mr_lifecycle.delete_topic(**kwargs)

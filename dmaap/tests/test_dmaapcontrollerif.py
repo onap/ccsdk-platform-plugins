@@ -45,12 +45,11 @@ _goodosv2 = {
 def test_dmaapc (monkeypatch, mockconsul, mockdmaapbc):
     from dmaapplugin.dmaaputils import random_string
 
-    config = test_consulif.test_get_config_service(monkeypatch)
-    DMAAP_API_URL = config['DMAAP_API_URL']
-    DMAAP_USER = config['DMAAP_USER']
-    DMAAP_PASS = config['DMAAP_PASS']
-    DMAAP_OWNER = config['DMAAP_OWNER']
-    assert DMAAP_API_URL != None
+    config = mockconsul().get_config('mockkey')['dmaap']
+    DMAAP_API_URL = config['url']
+    DMAAP_USER = config['username']
+    DMAAP_PASS = config['password']
+    DMAAP_OWNER = config['owner']
 
     properties = {'fqdn': 'a.x.example.com', 'openstack': _goodosv2 }
     mock_ctx = MockCloudifyContext(node_id='test_node_id', node_name='test_node_name', properties=properties,
@@ -61,66 +60,52 @@ def test_dmaapc (monkeypatch, mockconsul, mockdmaapbc):
                                    }
 				)
 
-    try:
-        current_ctx.set(mock_ctx)
-    except Exception as e:
-        raise NonRecoverableError(e) 
-#    finally:
-#        current_ctx.clear()
-   
+    current_ctx.set(mock_ctx)
+
     kwargs = { "topic_name": "ONAP_test",
             "topic_description": "onap dmaap plugin unit test topic"}
 
-    try:
-        # Make sure there's a topic_name
-        if "topic_name" in ctx.node.properties:
-            topic_name = ctx.node.properties["topic_name"]
-            if topic_name == '' or topic_name.isspace():
-                topic_name = random_string(12)
-        else:
+    # Make sure there's a topic_name
+    if "topic_name" in ctx.node.properties:
+        topic_name = ctx.node.properties["topic_name"]
+        if topic_name == '' or topic_name.isspace():
             topic_name = random_string(12)
+    else:
+        topic_name = random_string(12)
 
-        # Make sure there's a topic description
-        if "topic_description" in ctx.node.properties:
-            topic_description = ctx.node.properties["topic_description"]
-        else:
-            topic_description = "No description provided"
+    # Make sure there's a topic description
+    if "topic_description" in ctx.node.properties:
+        topic_description = ctx.node.properties["topic_description"]
+    else:
+        topic_description = "No description provided"
 
-        # ..and the truly optional setting
-        if "txenable" in ctx.node.properties:
-            txenable = ctx.node.properties["txenable"]
-        else:
-            txenable= False
+    # ..and the truly optional setting
+    if "txenable" in ctx.node.properties:
+        txenable = ctx.node.properties["txenable"]
+    else:
+        txenable= False
 
-        if "replication_case" in ctx.node.properties:
-            replication_case = ctx.node.properties["replication_case"]
-        else:
-            replication_case = None
+    if "replication_case" in ctx.node.properties:
+        replication_case = ctx.node.properties["replication_case"]
+    else:
+        replication_case = None
 
-        if "global_mr_url" in ctx.node.properties:
-            global_mr_url = ctx.node.properties["global_mr_url"]
-        else:
-            global_mr_url = None
+    if "global_mr_url" in ctx.node.properties:
+        global_mr_url = ctx.node.properties["global_mr_url"]
+    else:
+        global_mr_url = None
 
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
-        ctx.logger.info("Attempting to create topic name {0}".format(topic_name))
-        t = dmc.create_topic(topic_name, topic_description, txenable, DMAAP_OWNER, replication_case, global_mr_url)
+    dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+    ctx.logger.info("Attempting to create topic name {0}".format(topic_name))
+    t = dmc.create_topic(topic_name, topic_description, txenable, DMAAP_OWNER, replication_case, global_mr_url)
 
-        # Capture important properties from the result
-        topic = t.json()
-        ctx.instance.runtime_properties["fqtn"] = topic["fqtn"]
-
-    except Exception as e:
-        raise NonRecoverableError(e)
+    # Capture important properties from the result
+    topic = t.json()
+    ctx.instance.runtime_properties["fqtn"] = topic["fqtn"]
 
     # test DMaaPControllerHandle functions
-    try:
-        path = "myPath"
-        url = dmc._make_url(path)
-	rc = dmc._get_resource(path)
-        rc = dmc._create_resource(path, None)
-        rc = dmc._delete_resource(path)
- 
-    except Exception as e:
-        raise NonRecoverableError(e)
-
+    path = "myPath"
+    url = dmc._make_url(path)
+    rc = dmc._get_resource(path)
+    rc = dmc._create_resource(path, None)
+    rc = dmc._delete_resource(path)
