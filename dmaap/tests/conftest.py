@@ -26,16 +26,18 @@ import requests
 def mockconsul(monkeypatch):
     """ Override the regular Consul interface"""
     def fake_get_config(self, key):
-        config={'dmaap': {'username': 'm06814@controller.dcae.ecomp.att.com', 
-                'url': 'https://dcae-dbcl.d54852.dyh1b.tci.att.com:8443/webapi', 
-                'password' : 'Dca3wr3x',
-                'owner': 'dcaeorch' }}
+        config={'dmaap': {
+            'username': 'testuser@dmaaptest.example.com',
+            'url': 'https://dmaaptest.example.com:8443/webapi',
+            'password' : 'testpassword',
+            'owner': 'dcaeorch'
+        }}
         return config
 
     def fake_get_service(self, service_name):
         service_address = "myAddress"
         service_port= "8443"
-        return service_address, service_port 
+        return service_address, service_port
 
     def fake_add_to_entry(self, key, add_name, add_value):
         return True
@@ -53,9 +55,14 @@ def mockconsul(monkeypatch):
     monkeypatch.setattr(ConsulHandle, 'delete_entry', fake_delete_entry)
     monkeypatch.setattr(ConsulHandle, '__init__', fake_init)
 
+    def get_handle():
+        return ConsulHandle('mockconsul', None, None, None)
+    return get_handle
+
+
 @pytest.fixture()
 def mockdmaapbc(monkeypatch):
-    
+
     def fake_get(url, auth):
     #    print "fake_get: {0}, {1}".format(url, auth)
         r = requests.Response()
