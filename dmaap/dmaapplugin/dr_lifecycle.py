@@ -2,6 +2,7 @@
 # org.onap.ccsdk
 # =============================================================================
 # Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,9 +20,9 @@
 from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError
-from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, DMAAP_OWNER
-from dmaaputils import random_string
-from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
+from dmaapplugin.dmaaputils import (
+    random_string, consul_config, controller_handle)
+
 
 # Lifecycle operations for DMaaP Data Router feeds
 
@@ -65,9 +66,11 @@ def create_feed(**kwargs):
             useExisting = False
 
         # Make the request to the controller
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         ctx.logger.info("Attempting to create feed name {0}".format(feed_name))
-        f = dmc.create_feed(feed_name, feed_version, feed_description, aspr_classification, DMAAP_OWNER, useExisting)
+        f = dmc.create_feed(
+            feed_name, feed_version, feed_description, aspr_classification,
+            consul_config.dmaap_owner, useExisting)
         f.raise_for_status()
 
         # Capture important properties from the result
@@ -95,7 +98,7 @@ def get_existing_feed(**kwargs):
 
     try:
         # Make the lookup request to the controller
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         ctx.logger.info("DMaaPControllerHandle() returned")
         feed_id_input = False
         if "feed_id" in ctx.node.properties.keys():
@@ -142,7 +145,7 @@ def delete_feed(**kwargs):
     '''
     try:
         # Make the lookup request to the controllerid=ctx.node.properties["feed_id"]
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         f = dmc.delete_feed(ctx.instance.runtime_properties["feed_id"])
         f.raise_for_status()
         ctx.logger.info("Deleting feed id {0}".format(ctx.instance.runtime_properties["feed_id"]))

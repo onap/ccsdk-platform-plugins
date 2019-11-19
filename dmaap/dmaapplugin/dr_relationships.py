@@ -2,6 +2,7 @@
 # org.onap.ccsdk
 # =============================================================================
 # Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,10 +20,9 @@
 from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError
-from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, CONSUL_HOST
-from dmaaputils import random_string
-from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
-from consulif.consulif import ConsulHandle
+from dmaapplugin.dmaaputils import (
+    random_string, consul_handle, controller_handle)
+
 
 # Lifecycle operations for DMaaP Data Router
 # publish and subscribe relationships
@@ -62,7 +62,7 @@ def add_dr_publisher(**kwargs):
         password = random_string(16)
 
         # Make the request to add the publisher to the feed
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         add_pub = dmc.add_publisher(feed_id, location, username, password)
         add_pub.raise_for_status()
         publisher_info = add_pub.json()
@@ -80,7 +80,7 @@ def add_dr_publisher(**kwargs):
         }
 
         # Set key in Consul
-        ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
+        ch = consul_handle()
         cpy = dict(ctx.source.instance.runtime_properties[target_feed])
         ch.add_to_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']), target_feed, cpy)
 
@@ -110,7 +110,7 @@ def delete_dr_publisher(**kwargs):
         ctx.logger.info("Attempting to delete publisher {0}".format(publisher_id))
 
         # Make the request
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         del_result = dmc.delete_publisher(publisher_id)
         del_result.raise_for_status()
 
@@ -118,7 +118,7 @@ def delete_dr_publisher(**kwargs):
 
         # Attempt to remove the entire ":dmaap" entry from the Consul KV store
         # Will quietly do nothing if the entry has already been removed
-        ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
+        ch = consul_handle()
         ch.delete_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']))
 
     except Exception as e:
@@ -157,7 +157,7 @@ def add_dr_subscriber(**kwargs):
         privileged = feed["privileged"] if "privileged" in feed else False
 
         # Make the request to add the subscriber to the feed
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         add_sub = dmc.add_subscriber(feed_id, location, delivery_url,username, password, decompress, privileged)
         add_sub.raise_for_status()
         subscriber_info = add_sub.json()
@@ -178,7 +178,7 @@ def add_dr_subscriber(**kwargs):
         ctx.logger.info("on source: {0}".format(ctx.source.instance.runtime_properties[target_feed]))
 
         # Set key in Consul
-        ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
+        ch = consul_handle()
         cpy = dict(ctx.source.instance.runtime_properties[target_feed])
         ch.add_to_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']), target_feed, cpy)
 
@@ -202,7 +202,7 @@ def delete_dr_subscriber(**kwargs):
         ctx.logger.info("Attempting to delete subscriber {0} from feed {1}".format(subscriber_id, target_feed))
 
         # Make the request
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         del_result = dmc.delete_subscriber(subscriber_id)
         del_result.raise_for_status()
 
@@ -210,7 +210,7 @@ def delete_dr_subscriber(**kwargs):
 
         # Attempt to remove the entire ":dmaap" entry from the Consul KV store
         # Will quietly do nothing if the entry has already been removed
-        ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
+        ch = consul_handle()
         ch.delete_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']))
 
     except Exception as e:

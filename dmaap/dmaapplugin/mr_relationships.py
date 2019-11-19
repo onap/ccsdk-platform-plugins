@@ -2,6 +2,7 @@
 # org.onap.ccsdk
 # =============================================================================
 # Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2020 Pantheon.tech. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,9 +20,8 @@
 from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError
-from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, DMAAP_OWNER, CONSUL_HOST
-from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
-from consulif.consulif import ConsulHandle
+from dmaapplugin.dmaaputils import consul_handle, controller_handle
+
 
 # Message router relationship operations
 
@@ -56,7 +56,7 @@ def _add_mr_client(ctype, actions):
         client_role = ctx.source.instance.runtime_properties[target_topic]["client_role"]
 
         # Make the request to add the client to the topic
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         c = dmc.create_client(fqtn, location, client_role, actions)
         c.raise_for_status()
         client_info = c.json()
@@ -76,7 +76,7 @@ def _add_mr_client(ctype, actions):
         ctx.logger.info("Added {0} id {1} to feed {2} at {3}".format(ctype, client_id, fqtn, location))
 
         # Set key in Consul
-        ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
+        ch = consul_handle()
         ch.add_to_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']), target_topic, ctx.source.instance.runtime_properties[target_topic])
 
     except Exception as e:
@@ -102,7 +102,7 @@ def delete_mr_client(**kwargs):
         target_topic = ctx.target.node.id
         client_id = ctx.source.instance.runtime_properties[target_topic]["client_id"]
         ctx.logger.info("Attempting to delete client {0} ".format(client_id))
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         c = dmc.delete_client(client_id)
         c.raise_for_status()
 
@@ -110,7 +110,7 @@ def delete_mr_client(**kwargs):
 
         # Attempt to remove the entire ":dmaap" entry from the Consul KV store
         # Will quietly do nothing if the entry has already been removed
-        ch = ConsulHandle("http://{0}:8500".format(CONSUL_HOST), None, None, ctx.logger)
+        ch = consul_handle()
         ch.delete_entry("{0}:dmaap".format(ctx.source.instance.runtime_properties['service_component_name']))
 
     except Exception as e:
