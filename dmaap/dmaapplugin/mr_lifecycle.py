@@ -20,9 +20,9 @@
 from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError
-from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, DMAAP_OWNER
-from dmaapplugin.dmaaputils import random_string
-from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
+from dmaapplugin.dmaaputils import (
+    random_string, consul_config, controller_handle)
+
 
 # Lifecycle operations for DMaaP Message Router topics
 @operation
@@ -75,9 +75,11 @@ def create_topic(**kwargs):
             useExisting = False
 
         # Make the request to the controller
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         ctx.logger.info("Attempting to create topic name {0}".format(topic_name))
-        t = dmc.create_topic(topic_name, topic_description, txenable, DMAAP_OWNER, replication_case, global_mr_url, useExisting)
+        t = dmc.create_topic(
+            topic_name, topic_description, txenable, consul_config.dmaap_owner,
+            replication_case, global_mr_url, useExisting)
         t.raise_for_status()
 
         # Capture important properties from the result
@@ -100,7 +102,7 @@ def get_existing_topic(**kwargs):
     don't run into problems when we try to add a publisher or subscriber later.
     '''
     try:
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         fqtn_input = False
         if "fqtn" in ctx.node.properties:
             fqtn = ctx.node.properties["fqtn"]
@@ -133,7 +135,7 @@ def delete_topic(**kwargs):
     '''
     try:
         fqtn = ctx.instance.runtime_properties["fqtn"]
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
         ctx.logger.info("Attempting to delete topic {0}".format(fqtn))
         t = dmc.delete_topic(fqtn)
         t.raise_for_status()

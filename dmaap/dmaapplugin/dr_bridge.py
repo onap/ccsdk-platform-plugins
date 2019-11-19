@@ -20,9 +20,8 @@
 from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError
-from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS
-from dmaapplugin.dmaaputils import random_string
-from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
+from dmaapplugin.dmaaputils import random_string, controller_handle
+
 
 # Set up a subscriber to a source feed
 def _set_up_subscriber(dmc, source_feed_id, loc, delivery_url, username, userpw):
@@ -73,7 +72,7 @@ def create_dr_bridge(**kwargs):
         else:
             raise Exception('Source feed has no feed_id property')
 
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
 
         # Get a location to use when creating a publisher or subscriber--a central location seems reasonable
         loc = _get_central_location(dmc)
@@ -121,7 +120,7 @@ def create_external_dr_bridge(**kwargs):
         else:
             raise Exception('Source feed has no feed_id property')
 
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
 
         # Get a central location to use when creating subscriber
         loc = _get_central_location(dmc)
@@ -156,7 +155,7 @@ def create_external_source_dr_bridge(**kwargs):
         else:
             raise Exception('Target feed has no feed_id property')
 
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
 
         # Get a central location to use when creating a publisher
         loc = _get_central_location(dmc)
@@ -178,7 +177,7 @@ def create_external_source_dr_bridge(**kwargs):
 def remove_dr_bridge(**kwargs):
     try:
 
-        dmc = DMaaPControllerHandle(DMAAP_API_URL, DMAAP_USER, DMAAP_PASS, ctx.logger)
+        dmc = controller_handle()
 
         if ctx.target.node.id in ctx.source.instance.runtime_properties:
 
