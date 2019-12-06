@@ -22,6 +22,30 @@
       "revId": "fbb4f6408bc157ed35c306a6555dc19a4be49547",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bf13470_30940d9b",
+        "filename": "helm/plugin/tests/blueprint/blueprint.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2019-12-06T13:41:17Z",
+      "side": 1,
+      "message": "My understanding is that the tests do not do that much with the template, and they do pass with any value put there. Essentially, just eliminating use of the get_secret function seems enough.\n\nThe values look intentionally invalid, so that if they do become an issue, it can be discovered quickly from where they got sourced.\n\nIn case you know of a reviewer who might have an opinion what different values are needed, please engage him with the ticket/review.",
+      "parentUuid": "312846a1_24b0aa2e",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 49
+      },
+      "revId": "fbb4f6408bc157ed35c306a6555dc19a4be49547",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
