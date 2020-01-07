@@ -16,6 +16,24 @@
       "revId": "95c3815aeecd2b1754546ca5bd4d413cb4099411",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5dc1ccc3_703821aa",
+        "filename": "dmaap/tests/conftest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-01-07T11:22:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6610f758_c77a9e5d",
+      "revId": "95c3815aeecd2b1754546ca5bd4d413cb4099411",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
