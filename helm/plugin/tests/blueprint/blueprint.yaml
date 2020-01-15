@@ -70,9 +70,9 @@ node_templates:
             repo_user_password: { get_input: repo-user-password}
             config_format: { get_input: config-format}
             tls_enable: { get_input: tls-enable}
-            ca: { get_secret: ca_value}
-            cert: { get_secret: cert_value}
-            key: { get_secret: key_value}
+            ca: "result of get_secret ca_value"
+            cert: "result of get_secret cert_value"
+            key: "result of get_secret key_value"
             config_dir: { get_input: config-dir}
             stable_repo_url: { get_input: stable-repo-url}
 
