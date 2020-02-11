@@ -21,13 +21,13 @@ import os
 from cloudify import ctx
 from cloudify.decorators import operation
 
-@operation
+@operation(resumable=True)
 def generate(**kwargs):
   """
   Create SSH key pair
   """
   tmpdir = '/tmp/{0}'.format(uuid.uuid4().hex)
-  os.mkdir(tmpdir, 0700)
+  os.mkdir(tmpdir, 0o700)
   os.system('ssh-keygen -t rsa -b 2048 -C "hadoop@cdapcluster" -N "" -f {0}/id_rsa'.format(tmpdir))
   os.system('base64 -w 0 <{0}/id_rsa >{0}/id64'.format(tmpdir))
   with open('{0}/id64'.format(tmpdir), 'r') as f:
