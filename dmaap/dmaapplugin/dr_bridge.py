@@ -20,7 +20,13 @@ from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError
 from dmaapplugin import DMAAP_API_URL, DMAAP_USER, DMAAP_PASS
-from dmaaputils import random_string
+#import sys
+#USING_PYTHON2 = sys.version_info[0] < 3
+#if USING_PYTHON2:
+#    from dmaaputils import random_string
+#else:
+#    from .dmaaputils import random_string
+from .dmaaputils import random_string
 from dmaapcontrollerif.dmaap_requests import DMaaPControllerHandle
 
 # Set up a subscriber to a source feed
