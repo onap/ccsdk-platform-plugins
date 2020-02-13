@@ -16,11 +16,18 @@
 # limitations under the License.
 # ============LICENSE_END======================================================
 
+from __future__ import print_function
+import sys
+
 import requests
-from urlparse import urlparse
 from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError, RecoverableError
+USING_PYTHON2 = sys.version_info[0] < 3
+if USING_PYTHON2:
+  from urlparse import urlparse
+else:
+  from urllib.parse import urlparse
 
 def _check_status(resp, msg):
   if resp.status_code >= 300:
@@ -34,8 +41,8 @@ def _get_auth_info(openstack):
     (tok, gbls, urls) = _get_auth_info_v2(openstack)
   else:
     (tok, gbls, urls) = _get_auth_info_v3(openstack)
-  if len(urls.keys()) == 1:
-    reg = urls.keys()[0]
+  if len(list(urls.keys())) == 1:
+    reg = list(urls.keys())[0]
   else:
     reg = openstack['region']
   if reg in urls and 'dns' in urls[reg]:
