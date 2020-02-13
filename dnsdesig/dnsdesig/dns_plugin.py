@@ -1,7 +1,7 @@
 # ============LICENSE_START====================================================
 # org.onap.ccsdk
 # =============================================================================
-# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2018-2020 AT&T Intellectual Property. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,10 +17,15 @@
 # ============LICENSE_END======================================================
 
 import requests
-from urlparse import urlparse
 from cloudify import ctx
 from cloudify.decorators import operation
 from cloudify.exceptions import NonRecoverableError, RecoverableError
+import sys
+USING_PYTHON2 = sys.version_info[0] < 3
+if USING_PYTHON2:
+  from urlparse import urlparse
+else:
+  from urllib.parse import urlparse
 
 def _check_status(resp, msg):
   if resp.status_code >= 300:
@@ -34,8 +39,8 @@ def _get_auth_info(openstack):
     (tok, gbls, urls) = _get_auth_info_v2(openstack)
   else:
     (tok, gbls, urls) = _get_auth_info_v3(openstack)
-  if len(urls.keys()) == 1:
-    reg = urls.keys()[0]
+  if len(list(urls.keys())) == 1:
+    reg = list(urls.keys())[0]
   else:
     reg = openstack['region']
   if reg in urls and 'dns' in urls[reg]:

@@ -1,7 +1,7 @@
 # ============LICENSE_START====================================================
 # org.onap.ccsdk
 # =============================================================================
-# Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2017-2020 AT&T Intellectual Property. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 # ============LICENSE_END======================================================
 
 import requests
+import sys
+USING_PYTHON2 = sys.version_info[0] < 3
 
 ### "Constants"
 FEEDS_PATH = '/feeds'
@@ -287,9 +289,12 @@ class DMaaPControllerHandle(object):
         locations.raise_for_status()
 
         # pull out location names for VALID locations with matching dcae_layer
-        return  map(lambda l: l["dcaeLocationName"],
+        if USING_PYTHON2:
+            return  map(lambda l: l["dcaeLocationName"],
                     filter(lambda i : (i['dcaeLayer'] == dcae_layer and i['status'] == 'VALID'),
                        locations.json()))
+        else:
+            return  [l["dcaeLocationName"] for l in [i for i in locations.json() if (i['dcaeLayer'] == dcae_layer and i['status'] == 'VALID')]]
 
     def get_dcae_central_locations(self):
         '''
@@ -302,7 +307,10 @@ class DMaaPControllerHandle(object):
         locations.raise_for_status()
 
         # pull out location names for VALID central locations
-        return  map(lambda l: l["dcaeLocationName"],
+        if USING_PYTHON2:
+            return  map(lambda l: l["dcaeLocationName"],
                     filter(lambda i : ('central' in i['dcaeLayer'].lower() and i['status'] == 'VALID'),
                        locations.json()))
+        else:
+            return  [l["dcaeLocationName"] for l in [i for i in locations.json() if ('central' in i['dcaeLayer'].lower() and i['status'] == 'VALID')]]
 
