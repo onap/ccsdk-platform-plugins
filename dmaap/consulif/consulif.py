@@ -18,7 +18,12 @@
 
 import consul
 import json
-from urlparse import urlparse
+import sys
+USING_PYTHON2 = sys.version_info[0] < 3
+if USING_PYTHON2:
+  from urlparse import urlparse
+else:
+  from urllib.parse import urlparse
 
 class ConsulHandle(object):
     '''
