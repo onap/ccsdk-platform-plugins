@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1a4444c_460e75c7",
+        "filename": "dmaap/consulif/consulif.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-02-19T11:31:19Z",
+      "side": 1,
+      "message": "The recommended way is to try importing the new package, then fall back to the old location on ImportError. See the discussion and last example in section https://docs.python.org/3/howto/pyporting.html#use-feature-detection-instead-of-version-detection",
+      "revId": "cd29fc8b194c101c660353107be93648ba2c5d25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19fde111_fa609545",
+        "filename": "dmaap/dmaapcontrollerif/dmaap_requests.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-02-19T11:31:19Z",
+      "side": 1,
+      "message": "the python3 versions with list comprehensions work fine in python2.7, and can be done in single comprehensions, cf. https://gerrit.onap.org/r/c/ccsdk/platform/plugins/+/98448/6/dmaap/dmaapcontrollerif/dmaap_requests.py#291",
+      "revId": "cd29fc8b194c101c660353107be93648ba2c5d25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b7f1dc9_3a62a1ec",
+        "filename": "dmaap/dmaapplugin/dr_bridge.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-02-19T11:31:19Z",
+      "side": 1,
+      "message": "this is the dmaapplugin.dmaaputils module. I found it inconsistent to use a relative import here, and absolute in the line above.",
+      "revId": "cd29fc8b194c101c660353107be93648ba2c5d25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "937d03f7_21d8ce33",
+        "filename": "dmaap/dmaapplugin/dr_lifecycle.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-02-19T11:31:19Z",
+      "side": 1,
+      "message": "dicts already support the \u0027in\u0027 operator for their keys themselves; there\u0027s no need to create a new list of the keys each time.\n\nSo, \"feed_description\" in ctx.node.properties is perfectly legal. In fact, even in python3 the keys() function returns an object that supports \u0027in\u0027 checks. https://docs.python.org/3/library/stdtypes.html#dict-views.",
+      "revId": "cd29fc8b194c101c660353107be93648ba2c5d25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c7fe1a1_1358b074",
+        "filename": "dnsdesig/dnsdesig/dns_plugin.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-02-19T11:31:19Z",
+      "side": 1,
+      "message": "Using the keys() function is rarely ever needed. Dict itself supports len(), and list() over it does get the keys cf. https://gerrit.onap.org/r/c/ccsdk/platform/plugins/+/98448/6/dnsdesig/dnsdesig/dns_plugin.py#37",
+      "revId": "cd29fc8b194c101c660353107be93648ba2c5d25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1442683_a27bcc0b",
+        "filename": "dnsdesig/pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-02-19T11:31:19Z",
+      "side": 1,
+      "message": "Jack Lucas mentioned that version numbers should be incremented for all plugins.",
+      "revId": "cd29fc8b194c101c660353107be93648ba2c5d25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "968ab30f_89f6e62a",
+        "filename": "helm/tox.ini",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-02-19T11:31:19Z",
+      "side": 1,
+      "message": "only testenv:27 contains any commands, hence the py3x environments succeed without running any tests.",
+      "revId": "cd29fc8b194c101c660353107be93648ba2c5d25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b52075b8_d7b074f1",
+        "filename": "helm/tox.ini",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-02-19T11:31:19Z",
+      "side": 1,
+      "message": "I do not see dev-requirements.txt being updated, and it contains the split coudify-4.1.1 packages in master.",
+      "revId": "cd29fc8b194c101c660353107be93648ba2c5d25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c603dc0d_620cd2c2",
+        "filename": "pgaas/tox.ini",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 6172
+      },
+      "writtenOn": "2020-02-19T11:31:19Z",
+      "side": 1,
+      "message": "It seems this is standard practice throughout ONAP, to fix a dependency in place for years.\nThe dependency on cloudify is a dependency of the package itself, not of the test environment. The package also depends on psycopg2(-binary as CI doesn\u0027t support installing it from source), which is not registered anywhere. Something the DCAEGEN2 plugins wanted to have in place on that PR. /rant",
+      "revId": "cd29fc8b194c101c660353107be93648ba2c5d25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
