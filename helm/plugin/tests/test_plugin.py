@@ -27,6 +27,14 @@ from cloudify.mocks import MockCloudifyContext
 from cloudify.state import current_ctx
 from cloudify import ctx
 
+# TEMPORARY CODE BELOW
+# This code is provided only for use with python3 to work around issues
+# with Cloudify code depending on StringIO.
+import sys
+if sys.version_info[0] >= 3:
+    from os import getcwd
+    sys.path.append(getcwd() + "/p3compat")
+# TEMPORARY CODE ABOVE
 
 class TestPlugin(unittest.TestCase):
 
