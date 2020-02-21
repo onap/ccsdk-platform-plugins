@@ -3,7 +3,7 @@
 ============LICENSE_START=======================================================
 org.onap.ccsdk
 ================================================================================
-Copyright (c) 2017,2020 AT&T Intellectual Property. All rights reserved.
+Copyright (c) 2017-2020 AT&T Intellectual Property. All rights reserved.
 ================================================================================
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ limitations under the License.
   <parent>
     <groupId>org.onap.ccsdk.platform</groupId>
     <artifactId>plugins</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <!--- CHANGE THE FOLLOWING 3 OBJECTS for your own repo -->
