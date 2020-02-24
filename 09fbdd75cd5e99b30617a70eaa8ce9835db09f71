@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5148425a_3ba84402",
+        "filename": "dmaap/pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2020-02-24T14:58:24Z",
+      "side": 1,
+      "message": "should remain 1.1.0-SNAPSHOT (as parent pom is referencing this version still)",
+      "range": {
+        "startLine": 26,
+        "startChar": 13,
+        "endLine": 26,
+        "endChar": 18
+      },
+      "revId": "09fbdd75cd5e99b30617a70eaa8ce9835db09f71",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d29a5128_c0c573d9",
+        "filename": "helm/pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2020-02-24T14:58:24Z",
+      "side": 1,
+      "message": "should remain 1.1.0-SNAPSHOT (as parent pom is referencing this version still)",
+      "range": {
+        "startLine": 26,
+        "startChar": 13,
+        "endLine": 26,
+        "endChar": 18
+      },
+      "revId": "09fbdd75cd5e99b30617a70eaa8ce9835db09f71",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b863673f_d3f9c917",
+        "filename": "pgaas/pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2020-02-24T14:58:24Z",
+      "side": 1,
+      "message": "should remain 1.1.0-SNAPSHOT (as parent pom is referencing this version still)",
+      "range": {
+        "startLine": 26,
+        "startChar": 13,
+        "endLine": 26,
+        "endChar": 18
+      },
+      "revId": "09fbdd75cd5e99b30617a70eaa8ce9835db09f71",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8669b0aa_d89f8048",
+        "filename": "sshkeyshare/pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2020-02-24T14:58:24Z",
+      "side": 1,
+      "message": "should remain 1.1.0-SNAPSHOT (as parent pom is referencing this version still)",
+      "range": {
+        "startLine": 26,
+        "startChar": 13,
+        "endLine": 26,
+        "endChar": 18
+      },
+      "revId": "09fbdd75cd5e99b30617a70eaa8ce9835db09f71",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
