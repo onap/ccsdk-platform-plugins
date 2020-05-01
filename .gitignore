@@ -13,3 +13,4 @@ helm/nosetests.xml
 **/*.egg-info
 **/.testenv
 .vscode/*
+**/build
