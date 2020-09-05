@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c60e47de_466eddf4",
+        "filename": "dmaap/tests/conftest.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2020-09-05T21:32:34Z",
+      "side": 1,
+      "message": "copyright should be augmented to have a copyright 2020 for panteon\n\nsame for other files that have been changed",
+      "revId": "0b0a6ca5d765ea2bda591c34b6c995aae00bcd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
