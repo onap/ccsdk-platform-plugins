@@ -2,4 +2,3 @@
 #
 daebbf523be390041a1a9c0e340a6d833aae5043                                               	GitHub Replication
 e3cb8a4af61756df0294c229bc8ddbace63f8022                                               	saml/onap-gerrit-ccsdk-platform-plugins-committers
-ldap:cn=onap-gerrit-ccsdk-platform-plugins-committers,ou=Groups,dc=freestandards,dc=org	ldap/onap-gerrit-ccsdk-platform-plugins-committers
